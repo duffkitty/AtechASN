@@ -224,9 +224,10 @@ while($Continue -eq "Yes")
 			#Ready to move to the Automation?			#
 			#############################################
 			
-			$a = new-object -comobject wscript.shell
-			$b = $a.popup("Did the script log on to Atech?",0,"Ignition Login Box",1)
-			if($b -eq 2)
+#			$a = new-object -comobject wscript.shell
+#			$b = $a.popup("Did the script log on to Atech?",0,"Ignition Login Box",1)
+			$b = [System.Windows.Forms.MessageBox]::Show("Did we login to Atech correctly?" , "Status" , 4)
+			if($b -eq "No")
 			{
 				exit
 			}
@@ -238,9 +239,15 @@ while($Continue -eq "Yes")
 			#############################################
 			#Move CSV to correct Location				#
 			#############################################
+	
+			Move-Item -path $DownloadDir\AtechIgnitionASN.csv -destination $SaveDir\CSV\$Date-Ignition.csv
+			$Shipment = Import-CSV "$SaveDir\CSV\$Date-Ignition.csv"
+			if ((Test-Path $DownloadDir\AtechIgnitionASN.csv) -eq $true)
+			{
+				[System.Windows.Forms.MessageBox]::Show("After this point you will need to download a new CSV if there are any errors") | Out-Null
+				Remove-Item $DownloadDir\AtechIgnitionASN.csv
+			}
 			
-			Move-Item -path $DownloadDir\AtechIgnitionASN.csv -destination $SaveDir\$Date-Ignition.csv
-			$Shipment = Import-CSV "$SaveDir\$Date-Ignition.csv"
 			Write-Host "Data Loaded, showing Example!"
 			$Shipment[1,2,3]
 			
@@ -393,6 +400,8 @@ while($Continue -eq "Yes")
         }
         
         $i = $null
+		$b = $null
+		$a = $null
 		
     }
 
@@ -454,9 +463,14 @@ while($Continue -eq "Yes")
 			#Ready to move to the Automation?			#
 			#############################################
 			
-			$a = new-object -comobject wscript.shell
-			$b = $a.popup("Did the script log on to Atech?",0,"Test Message Box",1)
-			if($b -eq 2)
+			#$a = new-object -comobject wscript.shell
+			#$b = $a.popup("Did the script log on to Atech?",0,"Test Message Box",1)
+			#if($b -eq 2)
+			#{
+			#	exit
+			#}
+			$b = [System.Windows.Forms.MessageBox]::Show("Did we login to Atech correctly?" , "Status" , 4)
+			if($b -eq "No")
 			{
 				exit
 			}
@@ -469,8 +483,13 @@ while($Continue -eq "Yes")
 			#Move CSV to correct Location				#
 			#############################################
 			
-			Move-Item -path $DownloadDir\AtechExhaustASN.csv -destination $SaveDir\$Date-Exhaust.csv
-			$Shipment = Import-CSV "$SaveDir\$Date-Exhaust.csv"
+			Move-Item -path $DownloadDir\AtechExhaustASN.csv -destination $SaveDir\CSV\$Date-Exhaust.csv
+			$Shipment = Import-CSV "$SaveDir\CSV\$Date-Exhaust.csv"
+			if ((Test-Path $DownloadDir\AtechIExhaustASN.csv) -eq $true)
+			{
+				[System.Windows.Forms.MessageBox]::Show("After this point you will need to download a new CSV if there are any errors") | Out-Null
+				Remove-Item $DownloadDir\AtechExhaustASN.csv
+			}
 			Write-Host "Data Loaded, showing Example!"
 			$Shipment[1,2,3]
 			
@@ -628,6 +647,8 @@ while($Continue -eq "Yes")
 
 
         $i = $null
+		$a = $null
+		$b = $null
     }
 
 	$Shipment = $null
@@ -691,9 +712,14 @@ while($Continue -eq "Yes")
 			#Ready to move to the Automation?			#
 			#############################################
 			
-			$a = new-object -comobject wscript.shell
-			$b = $a.popup("Did the script log on to Atech?",0,"Test Message Box",4)
-			if($b -eq 2)
+			#$a = new-object -comobject wscript.shell
+			#$b = $a.popup("Did the script log on to Atech?",0,"Test Message Box",4)
+			#if($b -eq 2)
+			#{
+			#	exit
+			#}
+			$b = [System.Windows.Forms.MessageBox]::Show("Did we login to Atech correctly?" , "Status" , 4)
+			if($b -eq "No")
 			{
 				exit
 			}
@@ -706,8 +732,13 @@ while($Continue -eq "Yes")
 			#Move CSV to correct Location				#
 			#############################################
 			
-			Move-Item -path $DownloadDir\AtechExhPrivateLabelASN.csv -destination $SaveDir\$Date-ExhPrivateLabel.csv
-			$Shipment = Import-CSV "$SaveDir\$Date-ExhPrivateLabel.csv"
+			Move-Item -path $DownloadDir\AtechExhPrivateLabelASN.csv -destination $SaveDir\CSV\$Date-ExhPrivateLabel.csv
+			$Shipment = Import-CSV "$SaveDir\CSV\$Date-ExhPrivateLabel.csv"
+			if ((Test-Path $DownloadDir\AtechExhPrivateLabelASN.csv) -eq $true)
+			{
+				[System.Windows.Forms.MessageBox]::Show("After this point you will need to download a new CSV if there are any errors") | Out-Null
+				Remove-Item $DownloadDir\AtechExhPrivateLabelASN.csv
+			}
 			Write-Host "Data Loaded, showing Example!"
 			$Shipment[1,2,3]
 			
@@ -869,6 +900,8 @@ while($Continue -eq "Yes")
         #########################################
 
         $i = $null
+		$a = $null
+		$b = $null
     }
 
 	$Shipment = $null
