@@ -224,8 +224,6 @@ while($Continue -eq "Yes")
 			#Ready to move to the Automation?			#
 			#############################################
 			
-#			$a = new-object -comobject wscript.shell
-#			$b = $a.popup("Did the script log on to Atech?",0,"Ignition Login Box",1)
 			$b = [System.Windows.Forms.MessageBox]::Show("Did we login to Atech correctly?" , "Status" , 4)
 			if($b -eq "No")
 			{
@@ -461,13 +459,6 @@ while($Continue -eq "Yes")
 			#Ready to move to the Automation?			#
 			#############################################
 			
-			#$a = new-object -comobject wscript.shell
-			#$b = $a.popup("Did the script log on to Atech?",0,"Test Message Box",1)
-			#if($b -eq 2)
-			#{
-			#	exit
-			#}
-
 			$b = [System.Windows.Forms.MessageBox]::Show("Did we login to Atech correctly?" , "Status" , 4)
 			if($b -eq "No")
 			{
@@ -709,12 +700,6 @@ while($Continue -eq "Yes")
 			#Ready to move to the Automation?			#
 			#############################################
 			
-			#$a = new-object -comobject wscript.shell
-			#$b = $a.popup("Did the script log on to Atech?",0,"Test Message Box",4)
-			#if($b -eq 2)
-			#{
-			#	exit
-			#}
 			$b = [System.Windows.Forms.MessageBox]::Show("Did we login to Atech correctly?" , "Status" , 4)
 			if($b -eq "No")
 			{
