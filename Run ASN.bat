@@ -1,1 +1,1 @@
-cmd /c powershell.exe -file .\atechasnbeta1.1.ps1 > script.log
+cmd /c powershell.exe -file .\AtechASN.ps1 > script.log
