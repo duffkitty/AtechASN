@@ -248,9 +248,6 @@ while($Continue -eq "Yes")
 				Remove-Item $DownloadDir\AtechIgnitionASN.csv
 			}
 			
-			Write-Host "Data Loaded, showing Example!"
-			$Shipment[1,2,3]
-			
 			#################################
 			#Begin Building IIM				#
 			#################################
@@ -492,9 +489,7 @@ while($Continue -eq "Yes")
 				[System.Windows.Forms.MessageBox]::Show("After this point you will need to download a new CSV if there are any errors") | Out-Null
 				Remove-Item $DownloadDir\AtechExhaustASN.csv
 			}
-			Write-Host "Data Loaded, showing Example!"
-			$Shipment[1,2,3]
-			
+		
 			#############################################
 			#Begin Building IIM							#
 			#############################################
@@ -741,9 +736,7 @@ while($Continue -eq "Yes")
 				[System.Windows.Forms.MessageBox]::Show("After this point you will need to download a new CSV if there are any errors") | Out-Null
 				Remove-Item $DownloadDir\AtechExhPrivateLabelASN.csv
 			}
-			Write-Host "Data Loaded, showing Example!"
-			$Shipment[1,2,3]
-			
+		
 			#################################
 			#Begin Building IIM				#
 			#################################
