@@ -456,6 +456,7 @@ while($Continue -eq "Yes")
 			{
 				$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
 			}
+			$args = "imacros://run/?m=AtechExhaustLogin.iim"
 			start-process $cmdLine $args
 			Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
     
@@ -469,6 +470,7 @@ while($Continue -eq "Yes")
 			#{
 			#	exit
 			#}
+
 			$b = [System.Windows.Forms.MessageBox]::Show("Did we login to Atech correctly?" , "Status" , 4)
 			if($b -eq "No")
 			{

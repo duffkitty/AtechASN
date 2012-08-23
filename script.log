@@ -1,0 +1,12 @@
+Cancel
+Start-Process : Cannot validate argument on parameter 'ArgumentList'. The argum
+ent is null, empty, or an element of the argument collection contains a null va
+lue. Supply a collection that does not contain any null values and then try the
+ command again.
+At C:\Users\Bicho\Documents\GitHub\AtechASN\AtechASN.ps1:459 char:17
++             start-process <<<<  $cmdLine $args
+    + CategoryInfo          : InvalidData: (:) [Start-Process], ParameterBindi 
+   ngValidationException
+    + FullyQualifiedErrorId : ParameterArgumentValidationError,Microsoft.Power 
+   Shell.Commands.StartProcessCommand
+ 
