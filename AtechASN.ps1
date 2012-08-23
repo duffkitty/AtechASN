@@ -32,6 +32,7 @@ $Date = get-date -uformat %m%d%Y
 #########################################################
 #Remove Old files from older versions					#
 #########################################################
+
 if ((Test-Path $SaveDir\$Date.csv) -eq $true)
 {
     Remove-Item $SaveDir\$Date.csv
@@ -165,6 +166,7 @@ while($Continue -eq "Yes")
 	{
 		if ((Test-Path $DownloadDir\AtechIgnitionASN.csv) -eq $true)
 		{
+		
 			#############################################
 			#Remove old files							#
 			#############################################
@@ -177,6 +179,7 @@ while($Continue -eq "Yes")
 			{
 				Remove-Item $rootpath\AtechIgnitionLogin.iim
 			}
+			
 			#############################################
 			#Login information							#
 			#############################################
@@ -206,8 +209,13 @@ while($Continue -eq "Yes")
 			#Run Login Macro							#
 			#############################################
 			
-			$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
-			#$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
+			if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
+			{
+				$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
+			}else
+			{
+				$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
+			}
 			$args = "imacros://run/?m=AtechIgnitionLogin.iim"
 			start-process $cmdLine $args
 			Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
@@ -235,8 +243,11 @@ while($Continue -eq "Yes")
 			$Shipment = Import-CSV "$SaveDir\$Date-Ignition.csv"
 			Write-Host "Data Loaded, showing Example!"
 			$Shipment[1,2,3]
-
-			#Begin Building IIM
+			
+			#################################
+			#Begin Building IIM				#
+			#################################
+			
 			Add-Content $rootpath\AtechIgnitionASN.iim "VERSION BUILD=7401110 RECORDER=FX"
 			Add-Content $rootpath\AtechIgnitionASN.iim "`nTAB T=1"
 			Add-Content $rootpath\AtechIgnitionASN.iim "URL GOTO=https://b2b.atechmotorsports.com/ASNCreate.asp?Function=POForm"
@@ -249,6 +260,7 @@ while($Continue -eq "Yes")
 			{
 				$i = 0
 			}
+			
 			#####################################################
 			#Insert PO and Head to Creation Form				#
 			#Loop to move from one PO to the next.				#
@@ -272,7 +284,6 @@ while($Continue -eq "Yes")
 				while ($Shipment[$i].PONUMBER -eq $PONumber)
 				{
 					$QTYShipped = $Shipment[$i].QTYSHIPPED
-		
 					Add-Content $rootpath\AtechIgnitionASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=ID:ASNQty$q CONTENT=$QTYShipped"
 					
 					#################################################
@@ -328,7 +339,6 @@ while($Continue -eq "Yes")
 				{
 					$Carrier = "%0023"
 					$Comment = $Shipment[$i-1].SHIPPERNAME
-		
 					Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=$Comment"
 				}
 				Add-Content $rootpath\AtechIgnitionASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
@@ -363,14 +373,20 @@ while($Continue -eq "Yes")
 			#########################################
 			#Logout									#
 			#########################################
+			
 			Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
 			
 			#####################################################
 			#Run the Macro in Firefox, Firefox must be started!	#
 			#####################################################
     
-			$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
-			#$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
+			if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
+			{
+				$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
+			}else
+			{
+				$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
+			}
 			$args = "imacros://run/?m=AtechIgnitionASN.iim"
 			start-process $cmdLine $args
 			Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
@@ -423,15 +439,21 @@ while($Continue -eq "Yes")
 			#############################################
 			#Run Login Macro							#
 			#############################################
-			$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
-			#$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
-			$args = "imacros://run/?m=AtechExhaustLogin.iim"
+			
+			if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
+			{
+				$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
+			}else
+			{
+				$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
+			}
 			start-process $cmdLine $args
 			Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
     
 			#############################################
 			#Ready to move to the Automation?			#
 			#############################################
+			
 			$a = new-object -comobject wscript.shell
 			$b = $a.popup("Did the script log on to Atech?",0,"Test Message Box",1)
 			if($b -eq 2)
@@ -591,8 +613,13 @@ while($Continue -eq "Yes")
 			#Run the Macro in Firefox, Firefox must be started				#
 			#################################################################
     
-			$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
-			#$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
+			if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
+			{
+				$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
+			}else
+			{
+				$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
+			}
 			$args = "imacros://run/?m=AtechExhaustASN.iim"
 			start-process $cmdLine $args
 			Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
@@ -611,11 +638,15 @@ while($Continue -eq "Yes")
 		#Start ExhPrivateLabel block of code		#
 		#############################################
 		
-	if ($Division -eq "ExhPrivateLabel")
+	if ($Division -eq "PrivateLabel")
 	{
 		if ((Test-Path $DownloadDir\AtechExhPrivateLabelASN.csv) -eq $true)
 		{
-			#Remove old files
+		
+			#############################
+			#Remove old files			#
+			#############################
+			
 			if ((Test-Path $rootpath\AtechExhPrivateLabelASN.iim) -eq $true)
 			{    
 				Remove-Item $rootpath\AtechExhPrivateLabelASN.iim
@@ -645,8 +676,13 @@ while($Continue -eq "Yes")
 			#Run Login Macro							#
 			#############################################
 			
-			$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
-			#$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
+			if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
+			{
+				$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
+			}else
+			{
+				$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
+			}
 			$args = "imacros://run/?m=AtechExhPrivateLabelLogin.iim"
 			start-process $cmdLine $args
 			Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
@@ -656,7 +692,7 @@ while($Continue -eq "Yes")
 			#############################################
 			
 			$a = new-object -comobject wscript.shell
-			$b = $a.popup("Did the script log on to Atech?",0,"Test Message Box",1)
+			$b = $a.popup("Did the script log on to Atech?",0,"Test Message Box",4)
 			if($b -eq 2)
 			{
 				exit
@@ -674,8 +710,11 @@ while($Continue -eq "Yes")
 			$Shipment = Import-CSV "$SaveDir\$Date-ExhPrivateLabel.csv"
 			Write-Host "Data Loaded, showing Example!"
 			$Shipment[1,2,3]
-
-			#Begin Building IIM
+			
+			#################################
+			#Begin Building IIM				#
+			#################################
+			
 			Add-Content $rootpath\AtechExhPrivateLabelASN.iim "VERSION BUILD=7401110 RECORDER=FX"
 			Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAB T=1"
 			Add-Content $rootpath\AtechExhPrivateLabelASN.iim "URL GOTO=https://b2b.atechmotorsports.com/ASNCreate.asp?Function=POForm"
@@ -812,18 +851,23 @@ while($Continue -eq "Yes")
 			#Run the Macro in Firefox, Firefox must be started.				#
 			#################################################################
     
-			$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
-			#$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
+			if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
+			{
+				$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
+			}else
+			{
+				$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
+			}
 			$args = "imacros://run/?m=AtechExhPrivateLabelASN.iim"
 			start-process $cmdLine $args
 			Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
         }
 
 
+		#########################################
+        #For Testing Purposes Only				#
+        #########################################
 
-        ##For Testing Purposes Only
-        ##
-        ##
         $i = $null
     }
 
