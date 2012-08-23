@@ -484,7 +484,7 @@ while($Continue -eq "Yes")
 			
 			Move-Item -path $DownloadDir\AtechExhaustASN.csv -destination $SaveDir\CSV\$Date-Exhaust.csv
 			$Shipment = Import-CSV "$SaveDir\CSV\$Date-Exhaust.csv"
-			if ((Test-Path $DownloadDir\AtechIExhaustASN.csv) -eq $true)
+			if ((Test-Path $DownloadDir\AtechExhaustASN.csv) -eq $true)
 			{
 				[System.Windows.Forms.MessageBox]::Show("After this point you will need to download a new CSV if there are any errors") | Out-Null
 				Remove-Item $DownloadDir\AtechExhaustASN.csv
