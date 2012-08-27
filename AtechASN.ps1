@@ -1,25 +1,16 @@
 #########################################################
-#ASN Generation Script for Atech						#
-#Written by Anthony Sinatra								#
-#Written for PerTronix									#
-#Build 0.2.0 - Beta										#
+#ASN Generation Script for Atech						
+#Written by Anthony Sinatra								
+#Written for PerTronix								
+#Build 0.2.5 - Beta										
 #########################################################
 
 #########################################################
-#Check and Build required directories					#
-#########################################################
-
-if ((Test-Path $home\Documents\ASN) -eq $false)
-{
-    md $home\Documents\ASN
-}
-
-#########################################################
-#Set Required Paths										#
-#														#
-#														#
-#Setting the Continue Variable. If this isn't set code	#
-#will exit!												#
+#Set Required Paths										
+#														
+#														
+#Setting the Continue Variable. If this isn't set code	
+#will exit!												
 #########################################################
 
 $Continue = "Yes"
@@ -30,7 +21,7 @@ $DownloadDir = "$home\Downloads"
 $Date = get-date -uformat %m%d%Y
 
 #########################################################
-#Remove Old files from older versions					#
+#Remove Old files from older versions					
 #########################################################
 
 if ((Test-Path $SaveDir\$Date.csv) -eq $true)
@@ -43,23 +34,23 @@ if ((Test-Path $rootpath\AtechASN.iim) -eq $true)
 }
 
 #########################################################
-#Begin Code!											#
+#Begin Code!											
 #########################################################
 
 while($Continue -eq "Yes")
 {
 	#####################################################
-	#region functions									#
+	#region functions									
 	#####################################################
 	
 	#####################################################
-	# load WinForms										#
+	# load WinForms										
 	#####################################################
 	
 	[Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") | Out-Null
 	
 	#####################################################
-	# create form										#
+	# create form										
 	#####################################################
 	
 	$form = New-Object Windows.Forms.Form
@@ -70,7 +61,7 @@ while($Continue -eq "Yes")
 	$form.width = 350
 
 	#####################################################
-	# create label										#
+	# create label										
 	#####################################################
 	
 	$label = New-Object Windows.Forms.Label
@@ -82,7 +73,7 @@ while($Continue -eq "Yes")
 	$form.controls.add($label)
 	
 	#####################################################
-	# create button										#
+	# create button										
 	#####################################################
 	
 	$button = New-Object Windows.Forms.Button
@@ -94,7 +85,7 @@ while($Continue -eq "Yes")
 	$form.controls.add($button)
 	
 	#####################################################
-	# create radiobutton								#
+	# create radiobutton								
 	#####################################################
 	
 	$RadioButton = New-Object Windows.Forms.radiobutton
@@ -106,7 +97,7 @@ while($Continue -eq "Yes")
 	$form.controls.add($RadioButton)
 
 	#####################################################
-	# create radiobutton1								#
+	# create radiobutton1								
 	#####################################################
 	
 	$radiobutton1 = New-Object Windows.Forms.radiobutton
@@ -118,7 +109,7 @@ while($Continue -eq "Yes")
 	$form.controls.add($RadioButton1)
 
 	#####################################################
-	# create radiobutton2								#
+	# create radiobutton2								
 	#####################################################
 	
 	$radiobutton2 = New-Object Windows.Forms.radiobutton
@@ -130,7 +121,7 @@ while($Continue -eq "Yes")
 	$form.controls.add($RadioButton2)
 
 	#####################################################
-	# create event handler for button					#
+	# create event handler for button					
 	#####################################################
 	
 	$event = {
@@ -141,13 +132,13 @@ while($Continue -eq "Yes")
 	}
 
 	#####################################################
-	# attach event handler								#
+	# attach event handler								
 	#####################################################
 	
 	$button.Add_Click($event)
 
 	#####################################################
-	# attach controls to form							#
+	# attach controls to form							
 	#####################################################
 	
 	$form.controls.add($button)
@@ -159,7 +150,7 @@ while($Continue -eq "Yes")
 
 
 	#####################################################
-	#Start Ignition block of code						#
+	#Start Ignition block of code						
 	#####################################################
 	
 	if ($Division -eq "Ignition")
@@ -168,7 +159,7 @@ while($Continue -eq "Yes")
 		{
 		
 			#############################################
-			#Remove old files							#
+			#Remove old files							
 			#############################################
 			
 			if ((Test-Path $rootpath\AtechIgnitionASN.iim) -eq $true)
@@ -181,20 +172,20 @@ while($Continue -eq "Yes")
 			}
 			
 			#############################################
-			#Login information							#
+			#Login information							
 			#############################################
 			
 			$username = Read-Host 'Please input your Username for Ignition'
 			$pass = Read-Host 'Please input your password?' -AsSecureString
 			
 			#############################################
-			#Convert password to plain text variable	#
+			#Convert password to plain text variable	
 			#############################################
 			
 			$password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($pass))
 			
 			#############################################
-			#Build Login Macro 							#
+			#Build Login Macro 							
 			#############################################
 			
 			Add-Content $rootpath\AtechIgnitionLogin.iim "TAB T=1 `nURL GOTO=https://b2b.atechmotorsports.com/default.asp"
@@ -202,11 +193,12 @@ while($Continue -eq "Yes")
 			Add-Content $rootpath\AtechIgnitionLogin.iim "SET !ENCRYPTION NO"
 			Add-Content $rootpath\AtechIgnitionLogin.iim "TAG POS=1 TYPE=INPUT:PASSWORD FORM=NAME:frmLogin ATTR=NAME:Password CONTENT=$password"
 			Add-Content $rootpath\AtechIgnitionLogin.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmLogin ATTR=VALUE:Go"
+			Add-Content $rootpath\AtechIgnitionLogin.iim "SAVEAS TYPE=TXT FOLDER=$CSVDir FILE=login.txt"
 			$password = $null
 			
 			
 			#############################################
-			#Run Login Macro							#
+			#Run Login Macro							
 			#############################################
 			
 			if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
@@ -221,21 +213,33 @@ while($Continue -eq "Yes")
 			Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
     
 			#############################################
-			#Ready to move to the Automation?			#
+			#Ready to move to the Automation?			
 			#############################################
+			
+			while (!(Test-Path $CSVDir\login.txt))
+			{
+				#Wait Until exists!
+			}
+			
 			
 			$b = [System.Windows.Forms.MessageBox]::Show("Did we login to Atech correctly?" , "Status" , 4)
 			if($b -eq "No")
 			{
 				exit
 			}
+			
+			if ((Test-Path $CSVDir\login.txt) -eq $true)
+			{
+				Remove-Item $CSVDir\login.txt
+			}
+			
 			if ((Test-Path $rootpath\AtechIgnitionLogin.iim) -eq $true)
 			{
 				Remove-Item $rootpath\AtechIgnitionLogin.iim
 			}
 			
 			#############################################
-			#Move CSV to correct Location				#
+			#Move CSV to correct Location				
 			#############################################
 	
 			Move-Item -path $DownloadDir\AtechIgnitionASN.csv -destination $SaveDir\CSV\$Date-Ignition.csv
@@ -247,7 +251,7 @@ while($Continue -eq "Yes")
 			}
 			
 			#################################
-			#Begin Building IIM				#
+			#Begin Building IIM				
 			#################################
 			
 			Add-Content $rootpath\AtechIgnitionASN.iim "VERSION BUILD=7401110 RECORDER=FX"
@@ -255,7 +259,7 @@ while($Continue -eq "Yes")
 			Add-Content $rootpath\AtechIgnitionASN.iim "URL GOTO=https://b2b.atechmotorsports.com/ASNCreate.asp?Function=POForm"
 
 			#####################################################
-			#Determine if this is for the first line or not.	#
+			#Determine if this is for the first line or not.	
 			#####################################################
 			
 			if ($i -lt 1)
@@ -264,8 +268,8 @@ while($Continue -eq "Yes")
 			}
 			
 			#####################################################
-			#Insert PO and Head to Creation Form				#
-			#Loop to move from one PO to the next.				#
+			#Insert PO and Head to Creation Form				
+			#Loop to move from one PO to the next.				
 			#####################################################
 			
 			while ($i -le $Shipment.length-1)
@@ -280,7 +284,7 @@ while($Continue -eq "Yes")
 				$q = 1
 				
 				#################################################
-				#Fill in Item Quantity							#
+				#Fill in Item Quantity							
 				#################################################
 				
 				while ($Shipment[$i].PONUMBER -eq $PONumber)
@@ -289,7 +293,7 @@ while($Continue -eq "Yes")
 					Add-Content $rootpath\AtechIgnitionASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=ID:ASNQty$q CONTENT=$QTYShipped"
 					
 					#################################################
-					#Line Complete?									#
+					#Line Complete?									
 					#################################################
 					
 					$LineComplete = $Shipment[$i].LINECOMPLETE
@@ -304,7 +308,7 @@ while($Continue -eq "Yes")
 				}
 				
 				#################################################
-				#Determine Carrier Code							#
+				#Determine Carrier Code							
 				#################################################
 				
 				if ($Shipment[$i-1].SHIPPERNAME -eq "UPS  - Ground")
@@ -325,7 +329,7 @@ while($Continue -eq "Yes")
 				}elseif ($Shipment[$i-1].SHIPPERNAME -eq "UPS Blue Label ")
 				{
 					$Carrier = "%0041"
-				}elseif($Shipment[$i-1].SHIPPERNAME -eq "UPS Red Label ")
+				}elseif ($Shipment[$i-1].SHIPPERNAME -eq "UPS Red Label ")
 				{
 					$Carrier = "%0040"
 				}elseif ($Shipment[$i-1].SHIPPERNAME -eq "UPS Red Label Saturday Delivery")
@@ -334,7 +338,7 @@ while($Continue -eq "Yes")
 				}elseif ($Shipment[$i-1].SHIPPERNAME -eq '"Roadrunner"')
 				{
 					$Carrier = "%0034"
-				}elseif($Shipment[$i-1].SHIPPERNAME -eq '"UPS Freight LTL Standard"')
+				}elseif ($Shipment[$i-1].SHIPPERNAME -eq '"UPS Freight LTL Standard"')
 				{
 					$Carrier = "%0055"
 				}else
@@ -352,7 +356,7 @@ while($Continue -eq "Yes")
 				Add-Content $rootpath\AtechIgnitionASN.iim "`n'Tracking Number Insertion`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:BOL CONTENT=$TrackingNumber"
 		
 				#########################################
-				#Insert InvoiceNumber					#
+				#Insert InvoiceNumber					
 				#########################################
 				
 				$InvoiceNumber = $Shipment[$i-1].INVOICENUMBER
@@ -362,24 +366,24 @@ while($Continue -eq "Yes")
 				Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmApprove ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
 		
 				#########################################
-				#Save ASN as a Webpage					#
+				#Save ASN as a Webpage					
 				#########################################
 				Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\ FILE=$PONumber-{{!NOW:mm-dd-yyyy-hhnnss}}"
 	
 			}
 			
 			#########################################
-			#End Loop Here							#
+			#End Loop Here							
 			#########################################
             
 			#########################################
-			#Logout									#
+			#Logout									
 			#########################################
 			
 			Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
 			
 			#####################################################
-			#Run the Macro in Firefox, Firefox must be started!	#
+			#Run the Macro in Firefox, Firefox must be started!	
 			#####################################################
     
 			if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
@@ -392,7 +396,20 @@ while($Continue -eq "Yes")
 			$args = "imacros://run/?m=AtechIgnitionASN.iim"
 			start-process $cmdLine $args
 			Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
+			
+			$Continue = [System.Windows.Forms.MessageBox]::Show("ASN creation for Ignition should now be complete. Would you like to run another division?" , "Status" , 4)
+
+			
         }
+		
+		Else
+		{
+			$b = [System.Windows.Forms.MessageBox]::Show("Please make sure you downloaded the Ignition CSV from Pentaho. Would you like to start over?" , "Status" , 4)
+			if($b -eq "No")
+			{
+				exit
+			}
+		}
         
         $i = $null
 		$b = $null
@@ -403,7 +420,7 @@ while($Continue -eq "Yes")
 	$Shipment = $null
 	
 		#########################################
-		#Start Exhaust block of code			#
+		#Start Exhaust block of code			
 		#########################################
 		
 	if ($Division -eq "Exhaust")
@@ -412,7 +429,7 @@ while($Continue -eq "Yes")
 		{
 		
 			#################################
-			#Remove old files				#
+			#Remove old files				
 			#################################
 			
 			if ((Test-Path $rootpath\AtechExhaustASN.iim) -eq $true)
@@ -429,7 +446,7 @@ while($Continue -eq "Yes")
 			$password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($pass))
 			
 			#############################################
-			#Build Login Macro							#
+			#Build Login Macro							
 			#############################################
 			
 			Add-Content $rootpath\AtechExhaustLogin.iim "TAB T=1 `nURL GOTO=https://b2b.atechmotorsports.com/default.asp"
@@ -437,11 +454,12 @@ while($Continue -eq "Yes")
 			Add-Content $rootpath\AtechExhaustLogin.iim "SET !ENCRYPTION NO"
 			Add-Content $rootpath\AtechExhaustLogin.iim "TAG POS=1 TYPE=INPUT:PASSWORD FORM=NAME:frmLogin ATTR=NAME:Password CONTENT=$password"
 			Add-Content $rootpath\AtechExhaustLogin.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmLogin ATTR=VALUE:Go"
+			Add-Content $rootpath\AtechExhaustLogin.iim "SAVEAS TYPE=TXT FOLDER=$CSVDir FILE=login.txt"
 			$password = $null
 			
 			
 			#############################################
-			#Run Login Macro							#
+			#Run Login Macro							
 			#############################################
 			
 			if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
@@ -456,21 +474,33 @@ while($Continue -eq "Yes")
 			Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
     
 			#############################################
-			#Ready to move to the Automation?			#
+			#Ready to move to the Automation?			
 			#############################################
+			
+			while (!(Test-Path $CSVDir\login.txt))
+			{
+				#Wait Until exists!
+			}
+			
 			
 			$b = [System.Windows.Forms.MessageBox]::Show("Did we login to Atech correctly?" , "Status" , 4)
 			if($b -eq "No")
 			{
 				exit
 			}
+			
+			if ((Test-Path $CSVDir\login.txt) -eq $true)
+			{
+				Remove-Item $CSVDir\login.txt
+			}
+			
 			if ((Test-Path $rootpath\AtechExhaustLogin.iim) -eq $true)
 			{
 				Remove-Item $rootpath\AtechExhaustLogin.iim
 			}
 			
 			#############################################
-			#Move CSV to correct Location				#
+			#Move CSV to correct Location				
 			#############################################
 			
 			Move-Item -path $DownloadDir\AtechExhaustASN.csv -destination $SaveDir\CSV\$Date-Exhaust.csv
@@ -482,7 +512,7 @@ while($Continue -eq "Yes")
 			}
 		
 			#############################################
-			#Begin Building IIM							#
+			#Begin Building IIM							
 			#############################################
 			
 			Add-Content $rootpath\AtechExhaustASN.iim "VERSION BUILD=7401110 RECORDER=FX"
@@ -490,7 +520,7 @@ while($Continue -eq "Yes")
 			Add-Content $rootpath\AtechExhaustASN.iim "URL GOTO=https://b2b.atechmotorsports.com/ASNCreate.asp?Function=POForm"
 			
 			#####################################################
-			#Determine if this is for the first line or not.	#
+			#Determine if this is for the first line or not.	
 			#####################################################
 			
 			if ($i -lt 1)
@@ -499,8 +529,8 @@ while($Continue -eq "Yes")
 			}
 
 			#####################################################
-			#Insert PO and Head to Creation Form				#
-			#Loop to move from one PO to the next.				#
+			#Insert PO and Head to Creation Form				
+			#Loop to move from one PO to the next.				
 			#####################################################
 			
 			while ($i -le $Shipment.length-1)
@@ -515,7 +545,7 @@ while($Continue -eq "Yes")
 				$q = 1
 			
 				#################################################
-				#Fill in Item Quantity							#
+				#Fill in Item Quantity							
 				#################################################
 				
 				while ($Shipment[$i].PONUMBER -eq $PONumber)
@@ -525,7 +555,7 @@ while($Continue -eq "Yes")
 					Add-Content $rootpath\AtechExhaustASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=ID:ASNQty$q CONTENT=$QTYShipped"
 					
 					#############################################
-					#Line Complete?								#
+					#Line Complete?								
 					#############################################
 					
 					$LineComplete = $Shipment[$i].LINECOMPLETE
@@ -540,7 +570,7 @@ while($Continue -eq "Yes")
 				}
 				
 				#################################################
-				#Determine Carrier Code							#
+				#Determine Carrier Code							
 				#################################################
 				
 				if ($Shipment[$i-1].SHIPPERNAME -eq "UPS  - Ground")
@@ -561,7 +591,7 @@ while($Continue -eq "Yes")
 				}elseif ($Shipment[$i-1].SHIPPERNAME -eq "UPS Blue Label ")
 				{
 					$Carrier = "%0041"
-				}elseif($Shipment[$i-1].SHIPPERNAME -eq "UPS Red Label ")
+				}elseif ($Shipment[$i-1].SHIPPERNAME -eq "UPS Red Label ")
 				{
 					$Carrier = "%0040"
 				}elseif ($Shipment[$i-1].SHIPPERNAME -eq "UPS Red Label Saturday Delivery")
@@ -570,7 +600,7 @@ while($Continue -eq "Yes")
 				}elseif ($Shipment[$i-1].SHIPPERNAME -eq '"Roadrunner"')
 				{
 					$Carrier = "%0034"
-				}elseif($Shipment[$i-1].SHIPPERNAME -eq '"UPS Freight LTL Standard"')
+				}elseif ($Shipment[$i-1].SHIPPERNAME -eq '"UPS Freight LTL Standard"')
 				{
 					$Carrier = "%0055"
 				}else
@@ -588,7 +618,7 @@ while($Continue -eq "Yes")
 				Add-Content $rootpath\AtechExhaustASN.iim "`n'Tracking Number Insertion`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:BOL CONTENT=$TrackingNumber"
 				
 				#########################################
-				#Insert InvoiceNumber					#
+				#Insert InvoiceNumber					
 				#########################################
 				
 				$InvoiceNumber = $Shipment[$i-1].INVOICENUMBER
@@ -598,7 +628,7 @@ while($Continue -eq "Yes")
 				Add-Content $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmApprove ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
 		
 				#########################################
-				#Save ASN as a Webpage					#
+				#Save ASN as a Webpage					
 				#########################################
 				
 				Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\ FILE=$PONumber-{{!NOW:mm-dd-yyyy-hhnnss}}"
@@ -607,17 +637,17 @@ while($Continue -eq "Yes")
 			}
 			
 			#########################################
-			#End Loop Here							#
+			#End Loop Here							
 			#########################################
 
 			#########################################
-			#Logout									#
+			#Logout									
 			#########################################
 			
 			Add-Content $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
 			
 			#################################################################
-			#Run the Macro in Firefox, Firefox must be started				#
+			#Run the Macro in Firefox, Firefox must be started				
 			#################################################################
     
 			if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
@@ -630,8 +660,18 @@ while($Continue -eq "Yes")
 			$args = "imacros://run/?m=AtechExhaustASN.iim"
 			start-process $cmdLine $args
 			Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
-        }
+			$Continue = [System.Windows.Forms.MessageBox]::Show("ASN creation for Exhaust should now be complete. Would you like to run another division?" , "Status" , 4)
 
+        }
+		
+		Else
+		{
+			$b = [System.Windows.Forms.MessageBox]::Show("Please make sure you downloaded the Exhaust CSV from Pentaho. Would you like to start over?" , "Status" , 4)
+			if($b -eq "No")
+			{
+				exit
+			}
+		}
 
 
         $i = $null
@@ -644,7 +684,7 @@ while($Continue -eq "Yes")
 	
 	
 		#############################################
-		#Start ExhPrivateLabel block of code		#
+		#Start ExhPrivateLabel block of code		
 		#############################################
 		
 	if ($Division -eq "PrivateLabel")
@@ -653,7 +693,7 @@ while($Continue -eq "Yes")
 		{
 		
 			#############################
-			#Remove old files			#
+			#Remove old files			
 			#############################
 			
 			if ((Test-Path $rootpath\AtechExhPrivateLabelASN.iim) -eq $true)
@@ -670,7 +710,7 @@ while($Continue -eq "Yes")
 			$password = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($pass))
 			
 			#############################################
-			#Build Login Macro							#
+			#Build Login Macro							
 			#############################################
 			
 			Add-Content $rootpath\AtechExhPrivateLabelLogin.iim "TAB T=1 `nURL GOTO=https://b2b.atechmotorsports.com/default.asp"
@@ -678,11 +718,12 @@ while($Continue -eq "Yes")
 			Add-Content $rootpath\AtechExhPrivateLabelLogin.iim "SET !ENCRYPTION NO"
 			Add-Content $rootpath\AtechExhPrivateLabelLogin.iim "TAG POS=1 TYPE=INPUT:PASSWORD FORM=NAME:frmLogin ATTR=NAME:Password CONTENT=$password"
 			Add-Content $rootpath\AtechExhPrivateLabelLogin.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmLogin ATTR=VALUE:Go"
+			Add-Content $rootpath\AtechExhPrivateLabelLogin.iim "SAVEAS TYPE=TXT FOLDER=$CSVDir FILE=login.txt"
 			$password = $null
 			
 			
 			#############################################
-			#Run Login Macro							#
+			#Run Login Macro							
 			#############################################
 			
 			if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
@@ -697,21 +738,33 @@ while($Continue -eq "Yes")
 			Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
     
 			#############################################
-			#Ready to move to the Automation?			#
+			#Ready to move to the Automation?			
 			#############################################
+			
+			while (!(Test-Path $CSVDir\login.txt))
+			{
+				#Wait Until exists!
+			}
+			
 			
 			$b = [System.Windows.Forms.MessageBox]::Show("Did we login to Atech correctly?" , "Status" , 4)
 			if($b -eq "No")
 			{
 				exit
 			}
+			
+			if ((Test-Path $CSVDir\login.txt) -eq $true)
+			{
+				Remove-Item $CSVDir\login.txt
+			}
+			
 			if ((Test-Path $rootpath\AtechExhPrivateLabelLogin.iim) -eq $true)
 			{
 				Remove-Item $rootpath\AtechExhPrivateLabelLogin.iim
 			}
 			
 			#############################################
-			#Move CSV to correct Location				#
+			#Move CSV to correct Location				
 			#############################################
 			
 			Move-Item -path $DownloadDir\AtechExhPrivateLabelASN.csv -destination $SaveDir\CSV\$Date-ExhPrivateLabel.csv
@@ -723,7 +776,7 @@ while($Continue -eq "Yes")
 			}
 		
 			#################################
-			#Begin Building IIM				#
+			#Begin Building IIM				
 			#################################
 			
 			Add-Content $rootpath\AtechExhPrivateLabelASN.iim "VERSION BUILD=7401110 RECORDER=FX"
@@ -732,7 +785,7 @@ while($Continue -eq "Yes")
 
 
 			#####################################################
-			#Determine if this is for the first line or not.	#
+			#Determine if this is for the first line or not.	
 			#####################################################
 			
 			if ($i -lt 1)
@@ -741,8 +794,8 @@ while($Continue -eq "Yes")
 			}
 			
 			#################################################
-			#Insert PO and Head to Creation Form			#
-			#Loop to move from one PO to the next.			#
+			#Insert PO and Head to Creation Form			
+			#Loop to move from one PO to the next.			
 			#################################################
 			
 			while ($i -le $Shipment.length-1)
@@ -757,7 +810,7 @@ while($Continue -eq "Yes")
 				$q = 1
 				
 				#################################
-				#Fill in Item Quantity			#
+				#Fill in Item Quantity			
 				#################################
 				
 				while ($Shipment[$i].PONUMBER -eq $PONumber)
@@ -767,7 +820,7 @@ while($Continue -eq "Yes")
 					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=ID:ASNQty$q CONTENT=$QTYShipped"
 					
 					#################################
-					#Line Complete?					#
+					#Line Complete?					
 					#################################
 					
 					$LineComplete = $Shipment[$i].LINECOMPLETE
@@ -782,7 +835,7 @@ while($Continue -eq "Yes")
 				}
 				
 				#####################################
-				#Determine Carrier Code				#
+				#Determine Carrier Code				
 				#####################################
 				
 				if ($Shipment[$i-1].SHIPPERNAME -eq "UPS  - Ground")
@@ -803,7 +856,7 @@ while($Continue -eq "Yes")
 				}elseif ($Shipment[$i-1].SHIPPERNAME -eq "UPS Blue Label ")
 				{
 					$Carrier = "%0041"
-				}elseif($Shipment[$i-1].SHIPPERNAME -eq "UPS Red Label ")
+				}elseif ($Shipment[$i-1].SHIPPERNAME -eq "UPS Red Label ")
 				{
 					$Carrier = "%0040"
 				}elseif ($Shipment[$i-1].SHIPPERNAME -eq "UPS Red Label Saturday Delivery")
@@ -812,7 +865,7 @@ while($Continue -eq "Yes")
 				}elseif ($Shipment[$i-1].SHIPPERNAME -eq '"Roadrunner"')
 				{
 					$Carrier = "%0034"
-				}elseif($Shipment[$i-1].SHIPPERNAME -eq '"UPS Freight LTL Standard"')
+				}elseif ($Shipment[$i-1].SHIPPERNAME -eq '"UPS Freight LTL Standard"')
 				{
 					$Carrier = "%0055"
 				}else
@@ -831,7 +884,7 @@ while($Continue -eq "Yes")
 				Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Tracking Number Insertion`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:BOL CONTENT=$TrackingNumber"
 		
 				#########################################
-				#Insert InvoiceNumber					#
+				#Insert InvoiceNumber					
 				#########################################
 				
 				$InvoiceNumber = $Shipment[$i-1].INVOICENUMBER
@@ -841,7 +894,7 @@ while($Continue -eq "Yes")
 				Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmApprove ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
 		
 				#########################################
-				#Save ASN as a Webpage					#
+				#Save ASN as a Webpage					
 				#########################################
 				
 				Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\ FILE=$PONumber-{{!NOW:mm-dd-yyyy-hhnnss}}"
@@ -850,16 +903,16 @@ while($Continue -eq "Yes")
 			}
 			
 			#########################################
-			#End Loop Here							#
+			#End Loop Here							
 			#########################################
 
 			#########################################
-			#Logout									#
+			#Logout									
 			#########################################
 			Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
 			
 			#################################################################
-			#Run the Macro in Firefox, Firefox must be started.				#
+			#Run the Macro in Firefox, Firefox must be started.				
 			#################################################################
     
 			if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
@@ -872,11 +925,20 @@ while($Continue -eq "Yes")
 			$args = "imacros://run/?m=AtechExhPrivateLabelASN.iim"
 			start-process $cmdLine $args
 			Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
+			
+			$Continue = [System.Windows.Forms.MessageBox]::Show("ASN creation for Private Label should now be complete. Would you like to run another division?" , "Status" , 4)
         }
 
-
+		Else
+		{
+			$b = [System.Windows.Forms.MessageBox]::Show("Please make sure you downloaded the Private Label CSV from Pentaho. Would you like to start over?" , "Status" , 4)
+			if($b -eq "No")
+			{
+				exit
+			}
+		}
 		#########################################
-        #For Testing Purposes Only				#
+        #For Testing Purposes Only				
         #########################################
 
         $i = $null
@@ -886,5 +948,4 @@ while($Continue -eq "Yes")
 
 	$Shipment = $null
 	
-	$Continue = [System.Windows.Forms.MessageBox]::Show("Would you like to continue?" , "Status" , 4)
 }
