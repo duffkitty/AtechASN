@@ -2,7 +2,7 @@
 #ASN Generation Script for Atech						
 #Written by Anthony Sinatra								
 #Written for PerTronix								
-#Build 0.3.0 - Beta										
+#Build 0.3.1 - Beta										
 #########################################################
 
 #########################################################
@@ -704,18 +704,18 @@ while($Continue -eq "Yes")
 			#########################################
 			if($Errors.length -ne $null)
 			{
-			[reflection.assembly]::loadwithpartialname('system.windows.forms');
-			[system.Windows.Forms.MessageBox]::show($Errors)
-			[reflection.assembly]::loadwithpartialname('system.windows.forms');
-			[system.Windows.Forms.MessageBox]::show("If you did not catch that, the errors are logged in the ASN folder on the Snap Drive under todays date.")
-			
-			if($Errors.length -gt 0)
-			{
-				$Errors | Export-CSV $SaveDir\$Date\Errors.csv -notypeinformation
+				[reflection.assembly]::loadwithpartialname('system.windows.forms');
+				[system.Windows.Forms.MessageBox]::show($Errors)
+				[reflection.assembly]::loadwithpartialname('system.windows.forms');
+				[system.Windows.Forms.MessageBox]::show("If you did not catch that, the errors are logged in the ASN folder on the Snap Drive under todays date.")
+				
+				if($Errors.length -gt 0)
+				{
+					$Errors | Export-CSV $SaveDir\$Date\Errors.csv -notypeinformation
+				}
+				$Errors = $Null
+				$Continue = [System.Windows.Forms.MessageBox]::Show("ASN creation for Ignition should now be complete. Would you like to run another division?" , "Status" , 4)
 			}
-			$Errors = $Null
-			$Continue = [System.Windows.Forms.MessageBox]::Show("ASN creation for Ignition should now be complete. Would you like to run another division?" , "Status" , 4)
-
         }
 		
 		Else
@@ -1236,18 +1236,18 @@ while($Continue -eq "Yes")
 			#########################################
 			if($Errors.length -ne $null)
 			{
-			[reflection.assembly]::loadwithpartialname('system.windows.forms');
-			[system.Windows.Forms.MessageBox]::show($Errors)
-			[reflection.assembly]::loadwithpartialname('system.windows.forms');
-			[system.Windows.Forms.MessageBox]::show("If you did not catch that, the errors are logged in the ASN folder on the Snap Drive under todays date.")
-			
-			if($Errors.length -gt 0)
-			{
-				$Errors | Export-CSV $SaveDir\$Date\Errors.csv -notypeinformation
+				[reflection.assembly]::loadwithpartialname('system.windows.forms');
+				[system.Windows.Forms.MessageBox]::show($Errors)
+				[reflection.assembly]::loadwithpartialname('system.windows.forms');
+				[system.Windows.Forms.MessageBox]::show("If you did not catch that, the errors are logged in the ASN folder on the Snap Drive under todays date.")
+				
+				if($Errors.length -gt 0)
+				{
+					$Errors | Export-CSV $SaveDir\$Date\Errors.csv -notypeinformation
+				}
+				$Errors = $Null
+				$Continue = [System.Windows.Forms.MessageBox]::Show("ASN creation for Exhaust should now be complete. Would you like to run another division?" , "Status" , 4)
 			}
-			$Errors = $Null
-			$Continue = [System.Windows.Forms.MessageBox]::Show("ASN creation for Exhaust should now be complete. Would you like to run another division?" , "Status" , 4)
-
         }
 		
 		Else
@@ -1768,18 +1768,18 @@ while($Continue -eq "Yes")
 			#########################################
 			if($Errors.length -ne $null)
 			{
-			[reflection.assembly]::loadwithpartialname('system.windows.forms');
-			[system.Windows.Forms.MessageBox]::show($Errors)
-			[reflection.assembly]::loadwithpartialname('system.windows.forms');
-			[system.Windows.Forms.MessageBox]::show("If you did not catch that, the errors are logged in the ASN folder on the Snap Drive under todays date.")
+				[reflection.assembly]::loadwithpartialname('system.windows.forms');
+				[system.Windows.Forms.MessageBox]::show($Errors)
+				[reflection.assembly]::loadwithpartialname('system.windows.forms');
+				[system.Windows.Forms.MessageBox]::show("If you did not catch that, the errors are logged in the ASN folder on the Snap Drive under todays date.")
 			
-			if($Errors.length -gt 0)
-			{
-				$Errors | Export-CSV $SaveDir\$Date\Errors.csv -notypeinformation
+				if($Errors.length -gt 0)
+				{
+					$Errors | Export-CSV $SaveDir\$Date\Errors.csv -notypeinformation
+				}
+				$Errors = $Null
+				$Continue = [System.Windows.Forms.MessageBox]::Show("ASN creation for Private Label should now be complete. Would you like to run another division?" , "Status" , 4)
 			}
-			$Errors = $Null
-			$Continue = [System.Windows.Forms.MessageBox]::Show("ASN creation for Private Label should now be complete. Would you like to run another division?" , "Status" , 4)
-
         }
 		
 		Else
