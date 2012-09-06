@@ -2,7 +2,7 @@
 #ASN Generation Script for Atech						
 #Written by Anthony Sinatra								
 #Written for PerTronix								
-#Build 0.3.1 - Beta										
+#Build 0.3.2 - Beta										
 #########################################################
 
 #########################################################
@@ -433,49 +433,19 @@ while($Continue -eq "Yes")
 					#########################################
 					#Save ASN as a Webpage					
 					#########################################
-					if((Test-Path $SaveDir\$Date\$PONumber-$Date.HTM) -eq $false)
+					if((Test-Path $SaveDir\$Date\$PONumber-$Date.htm) -eq $true)
 					{
-						Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
+						Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
 					}
 					else
 					{
-						Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
+						Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
 					}
 					
 					Add-Content $rootpath\AtechIgnitionASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
 					
 					$i = $v
 					
-					if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
-					{
-						$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
-					}else
-					{
-						$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
-					}
-					$args = "imacros://run/?m=AtechIgnitionASN.iim"
-					start-process $cmdLine $args
-					Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
-					
-					while (!(Test-Path $SaveDir\done.txt))
-					{
-						#Wait Until exists!
-					}
-					
-					$f = Get-Content $SaveDir\done.txt | Select-String "No Results Found" -quiet
-					if($f -eq $true)
-					{
-						$Errors = $Errors + "$PONumber is not a valid PO and had a fatal error"
-						Remove-Item "$SaveDir\$PONumber-$Date"
-					}
-					$f = $null
-					$f = Get-Content $SaveDir\done.txt | Select-String "No items found with search criteria." -quiet
-					if($f -eq $true)
-					{
-						$Errors = $Errors + "$PONumber was probably already finished. If not please run manually."
-					}
-					
-					Remove-Item $SaveDir\done.txt
 				}
 				
 				else
@@ -484,29 +454,40 @@ while($Continue -eq "Yes")
 					#Continue checking!
 					##############################################
 					$c = $i
-					$s = "Reg"
+					$s = "tblDataRegRowBorder"
+                    $p = 3
 					$PONumberLines = $Shipment[$i].PONUMBER
 					if((Test-Path $rootpath\AtechIgnitionCheck.iim) -eq $true)
 					{
 						Remove-Item $rootpath\AtechIgnitionCheck.iim
 					}
-					
-					while($PONumberLines -eq $PONumber)
+					Add-Content $rootpath\AtechIgnitionCheck.iim "TAB T=1"
+					Add-Content $rootpath\AtechIgnitionCheck.iim "`n'Start at ASN Creation Screen.
+					`nURL GOTO=https://b2b.atechmotorsports.com/ASNCreate.asp?Function=POForm"
+					#New Stuff
+					Add-Content $rootpath\AtechIgnitionCheck.iim "SET !EXTRACT_TEST_POPUP NO"
+					Add-Content $rootpath\AtechIgnitionCheck.iim "SET !ERRORIGNORE YES"
+					Add-Content $rootpath\AtechIgnitionCheck.iim "SET !TIMEOUT_STEP 0"
+					#New Stuff
+					Add-Content $rootpath\AtechIgnitionCheck.iim "`n'Fill in PO#"
+					Add-Content $rootpath\AtechIgnitionCheck.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
+					Add-Content $rootpath\AtechIgnitionCheck.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
+			
+                    while($PONumberLines -eq $PONumber)
 					{
-						$p = 3
-						Add-Content $rootpath\AtechIgnitionCheck.iim "TAG POS=$p TYPE=TD FORM=ID:frmASNCreate ATTR=CLASS:tblData$sRowBorder EXTRACT=TXT"
+						Add-Content $rootpath\AtechIgnitionCheck.iim "TAG POS=$p TYPE=TD FORM=ID:frmASNCreate ATTR=CLASS:$s EXTRACT=TXT"
 						Add-Content $rootpath\AtechIgnitionCheck.iim "SAVEAS TYPE=EXTRACT FOLDER=$SaveDir FILE=AtechCheck-$PONumber.csv"
-						if($s -eq "Shade")
+						if($s -eq "tblDataShadeRowBorder")
 						{
 							$p = $p + 8
 						}
-						if($s -eq "Reg")
+						if($s -eq "tblDataRegRowBorder")
 						{
-							$s = "Shade"
+							$s = "tblDataShadeRowBorder"
 						}
-						elseif($s -eq "Shade")
+						elseif($s -eq "tblDataShadeRowBorder")
 						{
-							$s = "Reg"
+							$s = "tblDataRegRowBorder"
 						}
 						$c++
 						$PONumberLines = $Shipment[$c].PONUMBER
@@ -647,62 +628,73 @@ while($Continue -eq "Yes")
 						#########################################
 						#Save ASN as a Webpage					
 						#########################################
-						if((Test-Path $SaveDir\$Date\$PONumber-$Date) -eq $false)
+						if((Test-Path $SaveDir\$Date\$PONumber-$Date) -eq $true)
 						{
-							Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
+							Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
 						}
 						else
 						{
-							Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
+							Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
 						}	
 					}
+				}
+				#########################################
+				#Logout									
+				#########################################
+			
+				if($i -eq $Shipment.length-1)
+				{
+						Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
+				}				
+				
+				#####################################################
+				#Run the Macro in Firefox, Firefox must be started!	
+				#####################################################
+			
+				if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
+				{
+					$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
+				}else
+				{
+					$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
+				}
+				$args = "imacros://run/?m=AtechIgnitionASN.iim"
+				start-process $cmdLine $args
+				Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
+				
+				while (!(Test-Path $SaveDir\done.txt))
+				{
+					#Wait Until exists!
+				}
+				
+				$f = Get-Content $SaveDir\done.txt | Select-String "No Results Found" -quiet
+				if($f -eq $true)
+				{
+					$Errors = $Errors + "$PONumber is not a valid PO and had a fatal error"
+					Remove-Item "$SaveDir\$Date\$PONumber-$Date"
+				}
+				$f = $null
+				$f = Get-Content $SaveDir\done.txt | Select-String "No items found with search criteria." -quiet
+				if($f -eq $true)
+				{
+					$Errors = $Errors + "$PONumber was probably already finished. If not please run manually."
+				}
+					
+				Remove-Item $SaveDir\done.txt
 	
-				}	
+			
 				
 				$LineComplete = $null
 				$ProdCheck = $null
-				
+			
 			}
 				
 				
-			#########################################
-			#Logout									
-			#########################################
-			
-			if($i -eq $Shipment.length-1)
-			{
-				Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
-			}				
-			
-			#####################################################
-			#Run the Macro in Firefox, Firefox must be started!	
-			#####################################################
-	
-			if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
-			{
-				$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
-			}else
-			{
-				$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
-			}
-			$args = "imacros://run/?m=AtechIgnitionASN.iim"
-			start-process $cmdLine $args
-			Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
-			
-			while(!(Test-Path $SaveDir\done.txt))
-			{
-				#Wait until complete
-			}
-		
-			if((Test-Path $SaveDir\done.txt) -eq $true)
-			{
-				Remove-Item $SaveDir\done.txt
-			}
-			
+
 			#########################################
 			#End Loop Here							
 			#########################################
-			if($Errors.length -ne $null)
+			if($Errors.length -gt 0)
 			{
 				[reflection.assembly]::loadwithpartialname('system.windows.forms');
 				[system.Windows.Forms.MessageBox]::show($Errors)
@@ -711,12 +703,12 @@ while($Continue -eq "Yes")
 				
 				if($Errors.length -gt 0)
 				{
-					$Errors | Export-CSV $SaveDir\$Date\Errors.csv -notypeinformation
+					$Errors | Export-CSV $SaveDir\$Date\Ignition-Errors.csv
 				}
 				$Errors = $Null
-				$Continue = [System.Windows.Forms.MessageBox]::Show("ASN creation for Ignition should now be complete. Would you like to run another division?" , "Status" , 4)
 			}
-        }
+			$Continue = [System.Windows.Forms.MessageBox]::Show("ASN creation for Ignition should now be complete. Would you like to run another division?" , "Status" , 4)
+		}
 		
 		Else
 		{
@@ -731,10 +723,15 @@ while($Continue -eq "Yes")
 		$b = $null
 		$a = $null
 		$v = $null
-		
+		$Division = $null
     }
 
 	$Shipment = $null
+
+	#####################################################
+	#Start Exhaust block of code						
+	#####################################################
+	
 	if ($Division -eq "Exhaust")
 	{
 		#########################################################
@@ -965,49 +962,19 @@ while($Continue -eq "Yes")
 					#########################################
 					#Save ASN as a Webpage					
 					#########################################
-					if((Test-Path $SaveDir\$Date\$PONumber-$Date.HTM) -eq $false)
+					if((Test-Path $SaveDir\$Date\$PONumber-$Date.htm) -eq $true)
 					{
-						Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
+						Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
 					}
 					else
 					{
-						Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
+						Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
 					}
 					
 					Add-Content $rootpath\AtechExhaustASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
 					
 					$i = $v
 					
-					if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
-					{
-						$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
-					}else
-					{
-						$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
-					}
-					$args = "imacros://run/?m=AtechExhaustASN.iim"
-					start-process $cmdLine $args
-					Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
-					
-					while (!(Test-Path $SaveDir\done.txt))
-					{
-						#Wait Until exists!
-					}
-					
-					$f = Get-Content $SaveDir\done.txt | Select-String "No Results Found" -quiet
-					if($f -eq $true)
-					{
-						$Errors = $Errors + "$PONumber is not a valid PO and had a fatal error"
-						Remove-Item "$SaveDir\$PONumber-$Date"
-					}
-					$f = $null
-					$f = Get-Content $SaveDir\done.txt | Select-String "No items found with search criteria." -quiet
-					if($f -eq $true)
-					{
-						$Errors = $Errors + "$PONumber was probably already finished. If not please run manually."
-					}
-					
-					Remove-Item $SaveDir\done.txt
 				}
 				
 				else
@@ -1016,29 +983,40 @@ while($Continue -eq "Yes")
 					#Continue checking!
 					##############################################
 					$c = $i
-					$s = "Reg"
+					$s = "tblDataRegRowBorder"
+                    $p = 3
 					$PONumberLines = $Shipment[$i].PONUMBER
 					if((Test-Path $rootpath\AtechExhaustCheck.iim) -eq $true)
 					{
 						Remove-Item $rootpath\AtechExhaustCheck.iim
 					}
-					
-					while($PONumberLines -eq $PONumber)
+					Add-Content $rootpath\AtechExhaustCheck.iim "TAB T=1"
+					Add-Content $rootpath\AtechExhaustCheck.iim "`n'Start at ASN Creation Screen.
+					`nURL GOTO=https://b2b.atechmotorsports.com/ASNCreate.asp?Function=POForm"
+					#New Stuff
+					Add-Content $rootpath\AtechExhaustCheck.iim "SET !EXTRACT_TEST_POPUP NO"
+					Add-Content $rootpath\AtechExhaustCheck.iim "SET !ERRORIGNORE YES"
+					Add-Content $rootpath\AtechExhaustCheck.iim "SET !TIMEOUT_STEP 0"
+					#New Stuff
+					Add-Content $rootpath\AtechExhaustCheck.iim "`n'Fill in PO#"
+					Add-Content $rootpath\AtechExhaustCheck.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
+					Add-Content $rootpath\AtechExhaustCheck.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
+			
+                    while($PONumberLines -eq $PONumber)
 					{
-						$p = 3
-						Add-Content $rootpath\AtechExhaustCheck.iim "TAG POS=$p TYPE=TD FORM=ID:frmASNCreate ATTR=CLASS:tblData$sRowBorder EXTRACT=TXT"
+						Add-Content $rootpath\AtechExhaustCheck.iim "TAG POS=$p TYPE=TD FORM=ID:frmASNCreate ATTR=CLASS:$s EXTRACT=TXT"
 						Add-Content $rootpath\AtechExhaustCheck.iim "SAVEAS TYPE=EXTRACT FOLDER=$SaveDir FILE=AtechCheck-$PONumber.csv"
-						if($s -eq "Shade")
+						if($s -eq "tblDataShadeRowBorder")
 						{
 							$p = $p + 8
 						}
-						if($s -eq "Reg")
+						if($s -eq "tblDataRegRowBorder")
 						{
-							$s = "Shade"
+							$s = "tblDataShadeRowBorder"
 						}
-						elseif($s -eq "Shade")
+						elseif($s -eq "tblDataShadeRowBorder")
 						{
-							$s = "Reg"
+							$s = "tblDataRegRowBorder"
 						}
 						$c++
 						$PONumberLines = $Shipment[$c].PONUMBER
@@ -1179,62 +1157,73 @@ while($Continue -eq "Yes")
 						#########################################
 						#Save ASN as a Webpage					
 						#########################################
-						if((Test-Path $SaveDir\$Date\$PONumber-$Date) -eq $false)
+						if((Test-Path $SaveDir\$Date\$PONumber-$Date) -eq $true)
 						{
-							Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
+							Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
 						}
 						else
 						{
-							Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
+							Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
 						}	
 					}
+				}
+				#########################################
+				#Logout									
+				#########################################
+			
+				if($i -eq $Shipment.length-1)
+				{
+						Add-Content $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
+				}				
+				
+				#####################################################
+				#Run the Macro in Firefox, Firefox must be started!	
+				#####################################################
+			
+				if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
+				{
+					$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
+				}else
+				{
+					$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
+				}
+				$args = "imacros://run/?m=AtechExhaustASN.iim"
+				start-process $cmdLine $args
+				Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
+				
+				while (!(Test-Path $SaveDir\done.txt))
+				{
+					#Wait Until exists!
+				}
+				
+				$f = Get-Content $SaveDir\done.txt | Select-String "No Results Found" -quiet
+				if($f -eq $true)
+				{
+					$Errors = $Errors + "$PONumber is not a valid PO and had a fatal error"
+					Remove-Item "$SaveDir\$Date\$PONumber-$Date"
+				}
+				$f = $null
+				$f = Get-Content $SaveDir\done.txt | Select-String "No items found with search criteria." -quiet
+				if($f -eq $true)
+				{
+					$Errors = $Errors + "$PONumber was probably already finished. If not please run manually."
+				}
+					
+				Remove-Item $SaveDir\done.txt
 	
-				}	
+			
 				
 				$LineComplete = $null
 				$ProdCheck = $null
-				
+			
 			}
 				
 				
-			#########################################
-			#Logout									
-			#########################################
-			
-			if($i -eq $Shipment.length-1)
-			{
-				Add-Content $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
-			}				
-			
-			#####################################################
-			#Run the Macro in Firefox, Firefox must be started!	
-			#####################################################
-	
-			if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
-			{
-				$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
-			}else
-			{
-				$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
-			}
-			$args = "imacros://run/?m=AtechExhaustASN.iim"
-			start-process $cmdLine $args
-			Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
-			
-			while(!(Test-Path $SaveDir\done.txt))
-			{
-				#Wait until complete
-			}
-		
-			if((Test-Path $SaveDir\done.txt) -eq $true)
-			{
-				Remove-Item $SaveDir\done.txt
-			}
-			
+
 			#########################################
 			#End Loop Here							
 			#########################################
-			if($Errors.length -ne $null)
+			if($Errors.length -gt 0)
 			{
 				[reflection.assembly]::loadwithpartialname('system.windows.forms');
 				[system.Windows.Forms.MessageBox]::show($Errors)
@@ -1243,12 +1232,12 @@ while($Continue -eq "Yes")
 				
 				if($Errors.length -gt 0)
 				{
-					$Errors | Export-CSV $SaveDir\$Date\Errors.csv -notypeinformation
+					$Errors | Export-CSV $SaveDir\$Date\Exhaust-Errors.csv
 				}
 				$Errors = $Null
-				$Continue = [System.Windows.Forms.MessageBox]::Show("ASN creation for Exhaust should now be complete. Would you like to run another division?" , "Status" , 4)
 			}
-        }
+			$Continue = [System.Windows.Forms.MessageBox]::Show("ASN creation for Exhaust should now be complete. Would you like to run another division?" , "Status" , 4)
+		}
 		
 		Else
 		{
@@ -1263,10 +1252,14 @@ while($Continue -eq "Yes")
 		$b = $null
 		$a = $null
 		$v = $null
-		
+		$Division = $null
     }
 
 	$Shipment = $null
+	#####################################################
+	#Start Private Label block of code						
+	#####################################################
+	
 	if ($Division -eq "PrivateLabel")
 	{
 		#########################################################
@@ -1497,49 +1490,19 @@ while($Continue -eq "Yes")
 					#########################################
 					#Save ASN as a Webpage					
 					#########################################
-					if((Test-Path $SaveDir\$Date\$PONumber-$Date.HTM) -eq $false)
+					if((Test-Path $SaveDir\$Date\$PONumber-$Date.htm) -eq $true)
 					{
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
+						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
 					}
 					else
 					{
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
+						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
 					}
 					
 					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
 					
 					$i = $v
 					
-					if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
-					{
-						$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
-					}else
-					{
-						$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
-					}
-					$args = "imacros://run/?m=AtechExhPrivateLabelASN.iim"
-					start-process $cmdLine $args
-					Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
-					
-					while (!(Test-Path $SaveDir\done.txt))
-					{
-						#Wait Until exists!
-					}
-					
-					$f = Get-Content $SaveDir\done.txt | Select-String "No Results Found" -quiet
-					if($f -eq $true)
-					{
-						$Errors = $Errors + "$PONumber is not a valid PO and had a fatal error"
-						Remove-Item "$SaveDir\$PONumber-$Date"
-					}
-					$f = $null
-					$f = Get-Content $SaveDir\done.txt | Select-String "No items found with search criteria." -quiet
-					if($f -eq $true)
-					{
-						$Errors = $Errors + "$PONumber was probably already finished. If not please run manually."
-					}
-					
-					Remove-Item $SaveDir\done.txt
 				}
 				
 				else
@@ -1548,29 +1511,40 @@ while($Continue -eq "Yes")
 					#Continue checking!
 					##############################################
 					$c = $i
-					$s = "Reg"
+					$s = "tblDataRegRowBorder"
+                    $p = 3
 					$PONumberLines = $Shipment[$i].PONUMBER
 					if((Test-Path $rootpath\AtechExhPrivateLabelCheck.iim) -eq $true)
 					{
 						Remove-Item $rootpath\AtechExhPrivateLabelCheck.iim
 					}
-					
-					while($PONumberLines -eq $PONumber)
+					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "TAB T=1"
+					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "`n'Start at ASN Creation Screen.
+					`nURL GOTO=https://b2b.atechmotorsports.com/ASNCreate.asp?Function=POForm"
+					#New Stuff
+					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "SET !EXTRACT_TEST_POPUP NO"
+					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "SET !ERRORIGNORE YES"
+					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "SET !TIMEOUT_STEP 0"
+					#New Stuff
+					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "`n'Fill in PO#"
+					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
+					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
+			
+                    while($PONumberLines -eq $PONumber)
 					{
-						$p = 3
-						Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "TAG POS=$p TYPE=TD FORM=ID:frmASNCreate ATTR=CLASS:tblData$sRowBorder EXTRACT=TXT"
+						Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "TAG POS=$p TYPE=TD FORM=ID:frmASNCreate ATTR=CLASS:$s EXTRACT=TXT"
 						Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "SAVEAS TYPE=EXTRACT FOLDER=$SaveDir FILE=AtechCheck-$PONumber.csv"
-						if($s -eq "Shade")
+						if($s -eq "tblDataShadeRowBorder")
 						{
 							$p = $p + 8
 						}
-						if($s -eq "Reg")
+						if($s -eq "tblDataRegRowBorder")
 						{
-							$s = "Shade"
+							$s = "tblDataShadeRowBorder"
 						}
-						elseif($s -eq "Shade")
+						elseif($s -eq "tblDataShadeRowBorder")
 						{
-							$s = "Reg"
+							$s = "tblDataRegRowBorder"
 						}
 						$c++
 						$PONumberLines = $Shipment[$c].PONUMBER
@@ -1711,76 +1685,87 @@ while($Continue -eq "Yes")
 						#########################################
 						#Save ASN as a Webpage					
 						#########################################
-						if((Test-Path $SaveDir\$Date\$PONumber-$Date) -eq $false)
+						if((Test-Path $SaveDir\$Date\$PONumber-$Date) -eq $true)
 						{
-							Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
+							Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
 						}
 						else
 						{
-							Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
+							Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
 						}	
 					}
+				}
+				#########################################
+				#Logout									
+				#########################################
+			
+				if($i -eq $Shipment.length-1)
+				{
+						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
+				}				
+				
+				#####################################################
+				#Run the Macro in Firefox, Firefox must be started!	
+				#####################################################
+			
+				if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
+				{
+					$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
+				}else
+				{
+					$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
+				}
+				$args = "imacros://run/?m=AtechExhPrivateLabelASN.iim"
+				start-process $cmdLine $args
+				Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
+				
+				while (!(Test-Path $SaveDir\done.txt))
+				{
+					#Wait Until exists!
+				}
+				
+				$f = Get-Content $SaveDir\done.txt | Select-String "No Results Found" -quiet
+				if($f -eq $true)
+				{
+					$Errors = $Errors + "$PONumber is not a valid PO and had a fatal error"
+					Remove-Item "$SaveDir\$Date\$PONumber-$Date"
+				}
+				$f = $null
+				$f = Get-Content $SaveDir\done.txt | Select-String "No items found with search criteria." -quiet
+				if($f -eq $true)
+				{
+					$Errors = $Errors + "$PONumber was probably already finished. If not please run manually."
+				}
+					
+				Remove-Item $SaveDir\done.txt
 	
-				}	
+			
 				
 				$LineComplete = $null
 				$ProdCheck = $null
-				
+			
 			}
 				
 				
-			#########################################
-			#Logout									
-			#########################################
-			
-			if($i -eq $Shipment.length-1)
-			{
-				Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
-			}				
-			
-			#####################################################
-			#Run the Macro in Firefox, Firefox must be started!	
-			#####################################################
-	
-			if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
-			{
-				$cmdLine = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
-			}else
-			{
-				$cmdLine = "C:\Program Files\Mozilla Firefox\firefox.exe"
-			}
-			$args = "imacros://run/?m=AtechExhPrivateLabelASN.iim"
-			start-process $cmdLine $args
-			Get-Process | ? {$_.Name -like "firefox"} | %{$_.Close()}
-			
-			while(!(Test-Path $SaveDir\done.txt))
-			{
-				#Wait until complete
-			}
-		
-			if((Test-Path $SaveDir\done.txt) -eq $true)
-			{
-				Remove-Item $SaveDir\done.txt
-			}
-			
+
 			#########################################
 			#End Loop Here							
 			#########################################
-			if($Errors.length -ne $null)
+			if($Errors.length -gt 0)
 			{
 				[reflection.assembly]::loadwithpartialname('system.windows.forms');
 				[system.Windows.Forms.MessageBox]::show($Errors)
 				[reflection.assembly]::loadwithpartialname('system.windows.forms');
 				[system.Windows.Forms.MessageBox]::show("If you did not catch that, the errors are logged in the ASN folder on the Snap Drive under todays date.")
-			
+				
 				if($Errors.length -gt 0)
 				{
-					$Errors | Export-CSV $SaveDir\$Date\Errors.csv -notypeinformation
+					$Errors | Export-CSV $SaveDir\$Date\PrivateLabelErrors.csv
 				}
 				$Errors = $Null
-				$Continue = [System.Windows.Forms.MessageBox]::Show("ASN creation for Private Label should now be complete. Would you like to run another division?" , "Status" , 4)
 			}
-        }
+			$Continue = [System.Windows.Forms.MessageBox]::Show("ASN creation for Private Label should now be complete. Would you like to run another division?" , "Status" , 4)
+		}
 		
 		Else
 		{
@@ -1795,10 +1780,9 @@ while($Continue -eq "Yes")
 		$b = $null
 		$a = $null
 		$v = $null
-		
+		$Division = $null
     }
 
 	$Shipment = $null
 
 }
-	
