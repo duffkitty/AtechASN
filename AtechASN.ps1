@@ -2,7 +2,7 @@
 #ASN Generation Script for Atech						
 #Written by Anthony Sinatra								
 #Written for PerTronix								
-#Build 0.3.2 - Beta										
+#Build 0.3.5 - Beta										
 #########################################################
 
 #########################################################
@@ -317,7 +317,7 @@ while($Continue -eq "Yes")
 			#########################################################
 			
 			
-			while ($i -lt $Shipment.length-1)
+			while ($i -le $Shipment.length-1)
 			{			
 
 				#####################################################
@@ -404,14 +404,20 @@ while($Continue -eq "Yes")
 					}elseif ($Shipment[$i].SHIPPERNAME -eq '"Roadrunner"')
 					{
 						$Carrier = "%0034"
+					}elseif ($Shipment[$i-1].SHIPPERNAME -eq "Roadrunner")
+					{
+						$Carrier = "%0034"
 					}elseif ($Shipment[$i].SHIPPERNAME -eq '"UPS Freight LTL Standard"')
+					{
+						$Carrier = "%0055"
+					}elseif ($Shipment[$i].SHIPPERNAME -eq "UPS Freight LTL Standard")
 					{
 						$Carrier = "%0055"
 					}else
 					{
 						$Carrier = "%0023"
 						$Comment = $Shipment[$i].SHIPPERNAME
-						Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=$Comment"
+						Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
 					}
 					Add-Content $rootpath\AtechIgnitionASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
 			
@@ -435,7 +441,7 @@ while($Continue -eq "Yes")
 					#########################################
 					if((Test-Path $SaveDir\$Date\$PONumber-$Date.htm) -eq $true)
 					{
-						Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
+						Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
 					}
 					else
 					{
@@ -512,7 +518,7 @@ while($Continue -eq "Yes")
 					}
 					Remove-Item $SaveDir\done.txt				
 					$CheckPNX = Get-Content $SaveDir\AtechCheck-$PONumber.csv
-					$Check = $CheckPNX | ForEach-Object { $_.Remove(0,4) }
+					$Check = $CheckPNX | ForEach-Object {$_ -replace '"', ""} | ForEach-Object { $_.Remove(0,4) }
 					if((AreArraysEqual $Check $ProdCheck) -eq $false)
 					{
 					
@@ -521,6 +527,7 @@ while($Continue -eq "Yes")
 						#####################################################
 					
 						$Errors = $Errors + "$PONumber has a mismatched line. Either an incorrect part number was entered or it was entered out of order."
+                        $i = $v
 					}	
 					elseif((AreArraysEqual $Check $ProdCheck) -eq $true)
 					{
@@ -598,14 +605,20 @@ while($Continue -eq "Yes")
 						}elseif ($Shipment[$i-1].SHIPPERNAME -eq '"Roadrunner"')
 						{
 							$Carrier = "%0034"
+						}elseif ($Shipment[$i-1].SHIPPERNAME -eq "Roadrunner")
+						{
+							$Carrier = "%0034"
 						}elseif ($Shipment[$i-1].SHIPPERNAME -eq '"UPS Freight LTL Standard"')
+						{
+							$Carrier = "%0055"
+						}elseif ($Shipment[$i].SHIPPERNAME -eq "UPS Freight LTL Standard")
 						{
 							$Carrier = "%0055"
 						}else
 						{
 							$Carrier = "%0023"
 							$Comment = $Shipment[$i-1].SHIPPERNAME
-							Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=$Comment"
+							Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
 						}
 						Add-Content $rootpath\AtechIgnitionASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
 				
@@ -630,19 +643,21 @@ while($Continue -eq "Yes")
 						#########################################
 						if((Test-Path $SaveDir\$Date\$PONumber-$Date) -eq $true)
 						{
-							Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
+							Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
 						}
 						else
 						{
 							Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
-						}	
+						}
+						Add-Content $rootpath\AtechIgnitionASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
+
 					}
 				}
 				#########################################
 				#Logout									
 				#########################################
 			
-				if($i -eq $Shipment.length-1)
+				if($i -eq $Shipment.length)
 				{
 						Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
 				}				
@@ -728,6 +743,10 @@ while($Continue -eq "Yes")
 
 	$Shipment = $null
 
+	#####################################################
+	#Start Exhaust block of code						
+	#####################################################
+	
 	#####################################################
 	#Start Exhaust block of code						
 	#####################################################
@@ -846,7 +865,7 @@ while($Continue -eq "Yes")
 			#########################################################
 			
 			
-			while ($i -lt $Shipment.length-1)
+			while ($i -le $Shipment.length-1)
 			{			
 
 				#####################################################
@@ -933,14 +952,20 @@ while($Continue -eq "Yes")
 					}elseif ($Shipment[$i].SHIPPERNAME -eq '"Roadrunner"')
 					{
 						$Carrier = "%0034"
+					}elseif ($Shipment[$i-1].SHIPPERNAME -eq "Roadrunner")
+					{
+						$Carrier = "%0034"
 					}elseif ($Shipment[$i].SHIPPERNAME -eq '"UPS Freight LTL Standard"')
+					{
+						$Carrier = "%0055"
+					}elseif ($Shipment[$i].SHIPPERNAME -eq "UPS Freight LTL Standard")
 					{
 						$Carrier = "%0055"
 					}else
 					{
 						$Carrier = "%0023"
 						$Comment = $Shipment[$i].SHIPPERNAME
-						Add-Content $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=$Comment"
+						Add-Content $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
 					}
 					Add-Content $rootpath\AtechExhaustASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
 			
@@ -964,7 +989,7 @@ while($Continue -eq "Yes")
 					#########################################
 					if((Test-Path $SaveDir\$Date\$PONumber-$Date.htm) -eq $true)
 					{
-						Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
+						Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
 					}
 					else
 					{
@@ -1041,7 +1066,7 @@ while($Continue -eq "Yes")
 					}
 					Remove-Item $SaveDir\done.txt				
 					$CheckPNX = Get-Content $SaveDir\AtechCheck-$PONumber.csv
-					$Check = $CheckPNX | ForEach-Object { $_.Remove(0,4) }
+					$Check = $CheckPNX | ForEach-Object {$_ -replace '"', ""} | ForEach-Object { $_.Remove(0,4) }
 					if((AreArraysEqual $Check $ProdCheck) -eq $false)
 					{
 					
@@ -1050,6 +1075,7 @@ while($Continue -eq "Yes")
 						#####################################################
 					
 						$Errors = $Errors + "$PONumber has a mismatched line. Either an incorrect part number was entered or it was entered out of order."
+                        $i = $v
 					}	
 					elseif((AreArraysEqual $Check $ProdCheck) -eq $true)
 					{
@@ -1127,14 +1153,20 @@ while($Continue -eq "Yes")
 						}elseif ($Shipment[$i-1].SHIPPERNAME -eq '"Roadrunner"')
 						{
 							$Carrier = "%0034"
+						}elseif ($Shipment[$i-1].SHIPPERNAME -eq "Roadrunner")
+						{
+							$Carrier = "%0034"
 						}elseif ($Shipment[$i-1].SHIPPERNAME -eq '"UPS Freight LTL Standard"')
 						{
 							$Carrier = "%0055"
+						}elseif ($Shipment[$i].SHIPPERNAME -eq "UPS Freight LTL Standard")
+						{
+						$Carrier = "%0055"
 						}else
 						{
 							$Carrier = "%0023"
 							$Comment = $Shipment[$i-1].SHIPPERNAME
-							Add-Content $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=$Comment"
+							Add-Content $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
 						}
 						Add-Content $rootpath\AtechExhaustASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
 				
@@ -1159,19 +1191,21 @@ while($Continue -eq "Yes")
 						#########################################
 						if((Test-Path $SaveDir\$Date\$PONumber-$Date) -eq $true)
 						{
-							Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
+							Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
 						}
 						else
 						{
 							Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
-						}	
+						}
+						Add-Content $rootpath\AtechExhaustASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
+
 					}
 				}
 				#########################################
 				#Logout									
 				#########################################
 			
-				if($i -eq $Shipment.length-1)
+				if($i -eq $Shipment.length)
 				{
 						Add-Content $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
 				}				
@@ -1374,7 +1408,7 @@ while($Continue -eq "Yes")
 			#########################################################
 			
 			
-			while ($i -lt $Shipment.length-1)
+			while ($i -le $Shipment.length-1)
 			{			
 
 				#####################################################
@@ -1461,14 +1495,20 @@ while($Continue -eq "Yes")
 					}elseif ($Shipment[$i].SHIPPERNAME -eq '"Roadrunner"')
 					{
 						$Carrier = "%0034"
+					}elseif ($Shipment[$i].SHIPPERNAME -eq "Roadrunner")
+					{
+						$Carrier = "%0034"
 					}elseif ($Shipment[$i].SHIPPERNAME -eq '"UPS Freight LTL Standard"')
+					{
+						$Carrier = "%0055"
+					}elseif ($Shipment[$i].SHIPPERNAME -eq "UPS Freight LTL Standard")
 					{
 						$Carrier = "%0055"
 					}else
 					{
 						$Carrier = "%0023"
 						$Comment = $Shipment[$i].SHIPPERNAME
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=$Comment"
+						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
 					}
 					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
 			
@@ -1492,7 +1532,7 @@ while($Continue -eq "Yes")
 					#########################################
 					if((Test-Path $SaveDir\$Date\$PONumber-$Date.htm) -eq $true)
 					{
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
+						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
 					}
 					else
 					{
@@ -1569,7 +1609,7 @@ while($Continue -eq "Yes")
 					}
 					Remove-Item $SaveDir\done.txt				
 					$CheckPNX = Get-Content $SaveDir\AtechCheck-$PONumber.csv
-					$Check = $CheckPNX | ForEach-Object { $_.Remove(0,4) }
+					$Check = $CheckPNX | ForEach-Object {$_ -replace '"', ""} | ForEach-Object { $_.Remove(0,4) }
 					if((AreArraysEqual $Check $ProdCheck) -eq $false)
 					{
 					
@@ -1578,6 +1618,7 @@ while($Continue -eq "Yes")
 						#####################################################
 					
 						$Errors = $Errors + "$PONumber has a mismatched line. Either an incorrect part number was entered or it was entered out of order."
+                        $i = $v
 					}	
 					elseif((AreArraysEqual $Check $ProdCheck) -eq $true)
 					{
@@ -1655,14 +1696,20 @@ while($Continue -eq "Yes")
 						}elseif ($Shipment[$i-1].SHIPPERNAME -eq '"Roadrunner"')
 						{
 							$Carrier = "%0034"
+						}elseif ($Shipment[$i-1].SHIPPERNAME -eq "Roadrunner")
+						{
+							$Carrier = "%0034"
 						}elseif ($Shipment[$i-1].SHIPPERNAME -eq '"UPS Freight LTL Standard"')
+						{
+							$Carrier = "%0055"
+						}elseif ($Shipment[$i-1].SHIPPERNAME -eq "UPS Freight LTL Standard")
 						{
 							$Carrier = "%0055"
 						}else
 						{
 							$Carrier = "%0023"
 							$Comment = $Shipment[$i-1].SHIPPERNAME
-							Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=$Comment"
+							Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
 						}
 						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
 				
@@ -1687,19 +1734,21 @@ while($Continue -eq "Yes")
 						#########################################
 						if((Test-Path $SaveDir\$Date\$PONumber-$Date) -eq $true)
 						{
-							Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-2"
+							Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
 						}
 						else
 						{
 							Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
-						}	
+						}
+						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
+
 					}
 				}
 				#########################################
 				#Logout									
 				#########################################
 			
-				if($i -eq $Shipment.length-1)
+				if($i -eq $Shipment.length)
 				{
 						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
 				}				
@@ -1760,7 +1809,7 @@ while($Continue -eq "Yes")
 				
 				if($Errors.length -gt 0)
 				{
-					$Errors | Export-CSV $SaveDir\$Date\PrivateLabelErrors.csv
+					$Errors | Export-CSV $SaveDir\$Date\ExhPrivateLabel-Errors.csv
 				}
 				$Errors = $Null
 			}
