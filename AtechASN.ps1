@@ -2,7 +2,7 @@
 #ASN Generation Script for Atech						
 #Written by Anthony Sinatra								
 #Written for PerTronix								
-#Build 0.3.5 - Beta										
+#Build 0.3.6 - Beta										
 #########################################################
 
 #########################################################
@@ -175,9 +175,9 @@ while($Continue -eq "Yes")
 	#####################################################
 	
 	$event = {
-		if($radiobutton.checked){$Division = "Ignition"}
-		if($radiobutton1.checked){$Division = "Exhaust"}
-		if($radiobutton2.checked){$Division = "PrivateLabel"}
+		if($radiobutton.checked){$Global:Division = "Ignition"}
+		if($radiobutton1.checked){$Global:Division = "Exhaust"}
+		if($radiobutton2.checked){$Global:Division = "PrivateLabel"}
 		$form.Close()
 	}
 
@@ -244,12 +244,12 @@ while($Continue -eq "Yes")
 			#Build Login Macro 							
 			#############################################
 			
-			Add-Content $rootpath\AtechIgnitionLogin.iim "TAB T=1 `nURL GOTO=https://b2b.atechmotorsports.com/default.asp"
-			Add-Content $rootpath\AtechIgnitionLogin.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmLogin ATTR=NAME:UserName CONTENT=$username"
-			Add-Content $rootpath\AtechIgnitionLogin.iim "SET !ENCRYPTION NO"
-			Add-Content $rootpath\AtechIgnitionLogin.iim "TAG POS=1 TYPE=INPUT:PASSWORD FORM=NAME:frmLogin ATTR=NAME:Password CONTENT=$password"
-			Add-Content $rootpath\AtechIgnitionLogin.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmLogin ATTR=VALUE:Go"
-			Add-Content $rootpath\AtechIgnitionLogin.iim "SAVEAS TYPE=TXT FOLDER=$CSVDir FILE=login.txt"
+			Add-Content -Encoding UTF8 $rootpath\AtechIgnitionLogin.iim "TAB T=1 `nURL GOTO=https://b2b.atechmotorsports.com/default.asp"
+			Add-Content -Encoding UTF8 $rootpath\AtechIgnitionLogin.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmLogin ATTR=NAME:UserName CONTENT=$username"
+			Add-Content -Encoding UTF8 $rootpath\AtechIgnitionLogin.iim "SET !ENCRYPTION NO"
+			Add-Content -Encoding UTF8 $rootpath\AtechIgnitionLogin.iim "TAG POS=1 TYPE=INPUT:PASSWORD FORM=NAME:frmLogin ATTR=NAME:Password CONTENT=$password"
+			Add-Content -Encoding UTF8 $rootpath\AtechIgnitionLogin.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmLogin ATTR=VALUE:Go"
+			Add-Content -Encoding UTF8 $rootpath\AtechIgnitionLogin.iim "SAVEAS TYPE=TXT FOLDER=$CSVDir FILE=login.txt"
 			$password = $null
 			
 			
@@ -359,18 +359,18 @@ while($Continue -eq "Yes")
 					#Insert PO and Head to Creation Form				
 					#####################################################
 				
-					Add-Content $rootpath\AtechIgnitionASN.iim "TAB T=1"
-					Add-Content $rootpath\AtechIgnitionASN.iim "`n'Start at ASN Creation Screen.
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "TAB T=1"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`n'Start at ASN Creation Screen.
 					`nURL GOTO=https://b2b.atechmotorsports.com/ASNCreate.asp?Function=POForm"
 					#New Stuff
-					Add-Content $rootpath\AtechIgnitionASN.iim "SET !ERRORIGNORE YES"
-					Add-Content $rootpath\AtechIgnitionASN.iim "SET !TIMEOUT_STEP 0"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "SET !ERRORIGNORE YES"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "SET !TIMEOUT_STEP 0"
 					#New Stuff
-					Add-Content $rootpath\AtechIgnitionASN.iim "`n'Fill in PO#"
-					Add-Content $rootpath\AtechIgnitionASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
-					Add-Content $rootpath\AtechIgnitionASN.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
-					Add-Content $rootpath\AtechIgnitionASN.iim "`n'Fill in the Quantity Shipped"
-					Add-Content $rootpath\AtechIgnitionASN.iim "TAG POS=1 TYPE=INPUT:CHECKBOX FORM=NAME:frmASNCreate ATTR=NAME:CheckAllBoxes CONTENT=YES"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`n'Fill in PO#"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`n'Fill in the Quantity Shipped"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "TAG POS=1 TYPE=INPUT:CHECKBOX FORM=NAME:frmASNCreate ATTR=NAME:CheckAllBoxes CONTENT=YES"
 				
 				
 					#################################################
@@ -417,38 +417,38 @@ while($Continue -eq "Yes")
 					{
 						$Carrier = "%0023"
 						$Comment = $Shipment[$i].SHIPPERNAME
-						Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
 					}
-					Add-Content $rootpath\AtechIgnitionASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
 			
 					$DateShipped = $Shipment[$i].SHIPDATE
-					Add-Content $rootpath\AtechIgnitionASN.iim "`n'Shipment Date `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:Arrival CONTENT=%$DateShipped"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`n'Shipment Date `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:Arrival CONTENT=%$DateShipped"
 				
 					$TrackingNumber = $Shipment[$i].TRACKINGNO
-					Add-Content $rootpath\AtechIgnitionASN.iim "`n'Tracking Number Insertion`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:BOL CONTENT=$TrackingNumber"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`n'Tracking Number Insertion`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:BOL CONTENT=$TrackingNumber"
 			
 					#########################################
 					#Insert InvoiceNumber					
 					#########################################
 					
 					$InvoiceNumber = $Shipment[$i].INVOICENUMBER
-					Add-Content $rootpath\AtechIgnitionASN.iim "`n'Add InvoiceNumber to Invoice Field`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:VendorReference CONTENT=$InvoiceNumber"
-					Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:frmASNCreate ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
-					Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmApprove ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`n'Add InvoiceNumber to Invoice Field`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:VendorReference CONTENT=$InvoiceNumber"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:frmASNCreate ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmApprove ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
 			
 					#########################################
 					#Save ASN as a Webpage					
 					#########################################
 					if((Test-Path $SaveDir\$Date\$PONumber-$Date.htm) -eq $true)
 					{
-						Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
 					}
 					else
 					{
-						Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
 					}
 					
-					Add-Content $rootpath\AtechIgnitionASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
 					
 					$i = $v
 					
@@ -467,22 +467,22 @@ while($Continue -eq "Yes")
 					{
 						Remove-Item $rootpath\AtechIgnitionCheck.iim
 					}
-					Add-Content $rootpath\AtechIgnitionCheck.iim "TAB T=1"
-					Add-Content $rootpath\AtechIgnitionCheck.iim "`n'Start at ASN Creation Screen.
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionCheck.iim "TAB T=1"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionCheck.iim "`n'Start at ASN Creation Screen.
 					`nURL GOTO=https://b2b.atechmotorsports.com/ASNCreate.asp?Function=POForm"
 					#New Stuff
-					Add-Content $rootpath\AtechIgnitionCheck.iim "SET !EXTRACT_TEST_POPUP NO"
-					Add-Content $rootpath\AtechIgnitionCheck.iim "SET !ERRORIGNORE YES"
-					Add-Content $rootpath\AtechIgnitionCheck.iim "SET !TIMEOUT_STEP 0"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionCheck.iim "SET !EXTRACT_TEST_POPUP NO"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionCheck.iim "SET !ERRORIGNORE YES"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionCheck.iim "SET !TIMEOUT_STEP 0"
 					#New Stuff
-					Add-Content $rootpath\AtechIgnitionCheck.iim "`n'Fill in PO#"
-					Add-Content $rootpath\AtechIgnitionCheck.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
-					Add-Content $rootpath\AtechIgnitionCheck.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionCheck.iim "`n'Fill in PO#"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionCheck.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionCheck.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
 			
                     while($PONumberLines -eq $PONumber)
 					{
-						Add-Content $rootpath\AtechIgnitionCheck.iim "TAG POS=$p TYPE=TD FORM=ID:frmASNCreate ATTR=CLASS:$s EXTRACT=TXT"
-						Add-Content $rootpath\AtechIgnitionCheck.iim "SAVEAS TYPE=EXTRACT FOLDER=$SaveDir FILE=AtechCheck-$PONumber.csv"
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionCheck.iim "TAG POS=$p TYPE=TD FORM=ID:frmASNCreate ATTR=CLASS:$s EXTRACT=TXT"
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionCheck.iim "SAVEAS TYPE=EXTRACT FOLDER=$SaveDir FILE=AtechCheck-$PONumber.csv"
 						if($s -eq "tblDataShadeRowBorder")
 						{
 							$p = $p + 8
@@ -498,7 +498,7 @@ while($Continue -eq "Yes")
 						$c++
 						$PONumberLines = $Shipment[$c].PONUMBER
 					}
-					Add-Content $rootpath\AtechIgnitionCheck.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir FILE=done.txt"
+					Add-Content -Encoding UTF8 $rootpath\AtechIgnitionCheck.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir FILE=done.txt"
 					
 					if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
 					{
@@ -538,12 +538,12 @@ while($Continue -eq "Yes")
 						########################################################
 						#Check is ok! Continue to create ASN
 						########################################################
-						Add-Content $rootpath\AtechIgnitionASN.iim "`n'Start at ASN Creation Screen. User must be logged in!
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`n'Start at ASN Creation Screen. User must be logged in!
 						`nURL GOTO=https://b2b.atechmotorsports.com/ASNCreate.asp?Function=POForm"
-						Add-Content $rootpath\AtechIgnitionASN.iim "`n'Fill in PO#"
-						Add-Content $rootpath\AtechIgnitionASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
-						Add-Content $rootpath\AtechIgnitionASN.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
-						Add-Content $rootpath\AtechIgnitionASN.iim "`n'Fill in the Quantity Shipped"
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`n'Fill in PO#"
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`n'Fill in the Quantity Shipped"
 						$q = 1
 					
 						#################################################
@@ -560,12 +560,12 @@ while($Continue -eq "Yes")
 							$LineComplete = $Shipment[$i].LINECOMPLETE
 							if($LineComplete -eq "Y")
 							{
-								Add-Content $rootpath\AtechIgnitionASN.iim "TAG POS=1 TYPE=INPUT:CHECKBOX FORM=NAME:frmASNCreate ATTR=ID:checkbox_$q CONTENT=YES"
+								Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "TAG POS=1 TYPE=INPUT:CHECKBOX FORM=NAME:frmASNCreate ATTR=ID:checkbox_$q CONTENT=YES"
 							}
 							else
 							{
 								$QTYShipped = $Shipment[$i].QTYSHIPPED
-								Add-Content $rootpath\AtechIgnitionASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=ID:ASNQty$q CONTENT=$QTYShipped"
+								Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=ID:ASNQty$q CONTENT=$QTYShipped"
 							}
 							
 						
@@ -618,38 +618,38 @@ while($Continue -eq "Yes")
 						{
 							$Carrier = "%0023"
 							$Comment = $Shipment[$i-1].SHIPPERNAME
-							Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
+							Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
 						}
-						Add-Content $rootpath\AtechIgnitionASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
 				
 						$DateShipped = $Shipment[$i-1].SHIPDATE
-						Add-Content $rootpath\AtechIgnitionASN.iim "`n'Shipment Date `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:Arrival CONTENT=%$DateShipped"
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`n'Shipment Date `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:Arrival CONTENT=%$DateShipped"
 					
 						$TrackingNumber = $Shipment[$i-1].TRACKINGNO
-						Add-Content $rootpath\AtechIgnitionASN.iim "`n'Tracking Number Insertion`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:BOL CONTENT=$TrackingNumber"
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`n'Tracking Number Insertion`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:BOL CONTENT=$TrackingNumber"
 				
 						#########################################
 						#Insert InvoiceNumber					
 						#########################################
 						
 						$InvoiceNumber = $Shipment[$i-1].INVOICENUMBER
-						Add-Content $rootpath\AtechIgnitionASN.iim "`n'Add InvoiceNumber to Invoice Field`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:VendorReference CONTENT=$InvoiceNumber"
-						Add-Content $rootpath\AtechIgnitionASN.iim "WAIT SECONDS = 5"
-						Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:frmASNCreate ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
-						Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmApprove ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`n'Add InvoiceNumber to Invoice Field`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:VendorReference CONTENT=$InvoiceNumber"
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "WAIT SECONDS = 5"
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:frmASNCreate ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmApprove ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
 				
 						#########################################
 						#Save ASN as a Webpage					
 						#########################################
 						if((Test-Path $SaveDir\$Date\$PONumber-$Date) -eq $true)
 						{
-							Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
+							Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
 						}
 						else
 						{
-							Add-Content $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
+							Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
 						}
-						Add-Content $rootpath\AtechIgnitionASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
 
 					}
 				}
@@ -659,7 +659,7 @@ while($Continue -eq "Yes")
 			
 				if($i -eq $Shipment.length)
 				{
-						Add-Content $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
+						Add-Content -Encoding UTF8 $rootpath\AtechIgnitionASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
 				}				
 				
 				#####################################################
@@ -792,12 +792,12 @@ while($Continue -eq "Yes")
 			#Build Login Macro 							
 			#############################################
 			
-			Add-Content $rootpath\AtechExhaustLogin.iim "TAB T=1 `nURL GOTO=https://b2b.atechmotorsports.com/default.asp"
-			Add-Content $rootpath\AtechExhaustLogin.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmLogin ATTR=NAME:UserName CONTENT=$username"
-			Add-Content $rootpath\AtechExhaustLogin.iim "SET !ENCRYPTION NO"
-			Add-Content $rootpath\AtechExhaustLogin.iim "TAG POS=1 TYPE=INPUT:PASSWORD FORM=NAME:frmLogin ATTR=NAME:Password CONTENT=$password"
-			Add-Content $rootpath\AtechExhaustLogin.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmLogin ATTR=VALUE:Go"
-			Add-Content $rootpath\AtechExhaustLogin.iim "SAVEAS TYPE=TXT FOLDER=$CSVDir FILE=login.txt"
+			Add-Content -Encoding UTF8 $rootpath\AtechExhaustLogin.iim "TAB T=1 `nURL GOTO=https://b2b.atechmotorsports.com/default.asp"
+			Add-Content -Encoding UTF8 $rootpath\AtechExhaustLogin.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmLogin ATTR=NAME:UserName CONTENT=$username"
+			Add-Content -Encoding UTF8 $rootpath\AtechExhaustLogin.iim "SET !ENCRYPTION NO"
+			Add-Content -Encoding UTF8 $rootpath\AtechExhaustLogin.iim "TAG POS=1 TYPE=INPUT:PASSWORD FORM=NAME:frmLogin ATTR=NAME:Password CONTENT=$password"
+			Add-Content -Encoding UTF8 $rootpath\AtechExhaustLogin.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmLogin ATTR=VALUE:Go"
+			Add-Content -Encoding UTF8 $rootpath\AtechExhaustLogin.iim "SAVEAS TYPE=TXT FOLDER=$CSVDir FILE=login.txt"
 			$password = $null
 			
 			
@@ -907,18 +907,18 @@ while($Continue -eq "Yes")
 					#Insert PO and Head to Creation Form				
 					#####################################################
 				
-					Add-Content $rootpath\AtechExhaustASN.iim "TAB T=1"
-					Add-Content $rootpath\AtechExhaustASN.iim "`n'Start at ASN Creation Screen.
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "TAB T=1"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`n'Start at ASN Creation Screen.
 					`nURL GOTO=https://b2b.atechmotorsports.com/ASNCreate.asp?Function=POForm"
 					#New Stuff
-					Add-Content $rootpath\AtechExhaustASN.iim "SET !ERRORIGNORE YES"
-					Add-Content $rootpath\AtechExhaustASN.iim "SET !TIMEOUT_STEP 0"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "SET !ERRORIGNORE YES"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "SET !TIMEOUT_STEP 0"
 					#New Stuff
-					Add-Content $rootpath\AtechExhaustASN.iim "`n'Fill in PO#"
-					Add-Content $rootpath\AtechExhaustASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
-					Add-Content $rootpath\AtechExhaustASN.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
-					Add-Content $rootpath\AtechExhaustASN.iim "`n'Fill in the Quantity Shipped"
-					Add-Content $rootpath\AtechExhaustASN.iim "TAG POS=1 TYPE=INPUT:CHECKBOX FORM=NAME:frmASNCreate ATTR=NAME:CheckAllBoxes CONTENT=YES"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`n'Fill in PO#"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`n'Fill in the Quantity Shipped"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "TAG POS=1 TYPE=INPUT:CHECKBOX FORM=NAME:frmASNCreate ATTR=NAME:CheckAllBoxes CONTENT=YES"
 				
 				
 					#################################################
@@ -965,38 +965,38 @@ while($Continue -eq "Yes")
 					{
 						$Carrier = "%0023"
 						$Comment = $Shipment[$i].SHIPPERNAME
-						Add-Content $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
 					}
-					Add-Content $rootpath\AtechExhaustASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
 			
 					$DateShipped = $Shipment[$i].SHIPDATE
-					Add-Content $rootpath\AtechExhaustASN.iim "`n'Shipment Date `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:Arrival CONTENT=%$DateShipped"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`n'Shipment Date `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:Arrival CONTENT=%$DateShipped"
 				
 					$TrackingNumber = $Shipment[$i].TRACKINGNO
-					Add-Content $rootpath\AtechExhaustASN.iim "`n'Tracking Number Insertion`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:BOL CONTENT=$TrackingNumber"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`n'Tracking Number Insertion`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:BOL CONTENT=$TrackingNumber"
 			
 					#########################################
 					#Insert InvoiceNumber					
 					#########################################
 					
 					$InvoiceNumber = $Shipment[$i].INVOICENUMBER
-					Add-Content $rootpath\AtechExhaustASN.iim "`n'Add InvoiceNumber to Invoice Field`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:VendorReference CONTENT=$InvoiceNumber"
-					Add-Content $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:frmASNCreate ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
-					Add-Content $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmApprove ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`n'Add InvoiceNumber to Invoice Field`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:VendorReference CONTENT=$InvoiceNumber"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:frmASNCreate ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmApprove ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
 			
 					#########################################
 					#Save ASN as a Webpage					
 					#########################################
 					if((Test-Path $SaveDir\$Date\$PONumber-$Date.htm) -eq $true)
 					{
-						Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
 					}
 					else
 					{
-						Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
 					}
 					
-					Add-Content $rootpath\AtechExhaustASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
 					
 					$i = $v
 					
@@ -1015,22 +1015,22 @@ while($Continue -eq "Yes")
 					{
 						Remove-Item $rootpath\AtechExhaustCheck.iim
 					}
-					Add-Content $rootpath\AtechExhaustCheck.iim "TAB T=1"
-					Add-Content $rootpath\AtechExhaustCheck.iim "`n'Start at ASN Creation Screen.
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustCheck.iim "TAB T=1"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustCheck.iim "`n'Start at ASN Creation Screen.
 					`nURL GOTO=https://b2b.atechmotorsports.com/ASNCreate.asp?Function=POForm"
 					#New Stuff
-					Add-Content $rootpath\AtechExhaustCheck.iim "SET !EXTRACT_TEST_POPUP NO"
-					Add-Content $rootpath\AtechExhaustCheck.iim "SET !ERRORIGNORE YES"
-					Add-Content $rootpath\AtechExhaustCheck.iim "SET !TIMEOUT_STEP 0"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustCheck.iim "SET !EXTRACT_TEST_POPUP NO"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustCheck.iim "SET !ERRORIGNORE YES"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustCheck.iim "SET !TIMEOUT_STEP 0"
 					#New Stuff
-					Add-Content $rootpath\AtechExhaustCheck.iim "`n'Fill in PO#"
-					Add-Content $rootpath\AtechExhaustCheck.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
-					Add-Content $rootpath\AtechExhaustCheck.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustCheck.iim "`n'Fill in PO#"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustCheck.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustCheck.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
 			
                     while($PONumberLines -eq $PONumber)
 					{
-						Add-Content $rootpath\AtechExhaustCheck.iim "TAG POS=$p TYPE=TD FORM=ID:frmASNCreate ATTR=CLASS:$s EXTRACT=TXT"
-						Add-Content $rootpath\AtechExhaustCheck.iim "SAVEAS TYPE=EXTRACT FOLDER=$SaveDir FILE=AtechCheck-$PONumber.csv"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustCheck.iim "TAG POS=$p TYPE=TD FORM=ID:frmASNCreate ATTR=CLASS:$s EXTRACT=TXT"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustCheck.iim "SAVEAS TYPE=EXTRACT FOLDER=$SaveDir FILE=AtechCheck-$PONumber.csv"
 						if($s -eq "tblDataShadeRowBorder")
 						{
 							$p = $p + 8
@@ -1046,7 +1046,7 @@ while($Continue -eq "Yes")
 						$c++
 						$PONumberLines = $Shipment[$c].PONUMBER
 					}
-					Add-Content $rootpath\AtechExhaustCheck.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir FILE=done.txt"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhaustCheck.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir FILE=done.txt"
 					
 					if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
 					{
@@ -1086,12 +1086,12 @@ while($Continue -eq "Yes")
 						########################################################
 						#Check is ok! Continue to create ASN
 						########################################################
-						Add-Content $rootpath\AtechExhaustASN.iim "`n'Start at ASN Creation Screen. User must be logged in!
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`n'Start at ASN Creation Screen. User must be logged in!
 						`nURL GOTO=https://b2b.atechmotorsports.com/ASNCreate.asp?Function=POForm"
-						Add-Content $rootpath\AtechExhaustASN.iim "`n'Fill in PO#"
-						Add-Content $rootpath\AtechExhaustASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
-						Add-Content $rootpath\AtechExhaustASN.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
-						Add-Content $rootpath\AtechExhaustASN.iim "`n'Fill in the Quantity Shipped"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`n'Fill in PO#"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`n'Fill in the Quantity Shipped"
 						$q = 1
 					
 						#################################################
@@ -1108,12 +1108,12 @@ while($Continue -eq "Yes")
 							$LineComplete = $Shipment[$i].LINECOMPLETE
 							if($LineComplete -eq "Y")
 							{
-								Add-Content $rootpath\AtechExhaustASN.iim "TAG POS=1 TYPE=INPUT:CHECKBOX FORM=NAME:frmASNCreate ATTR=ID:checkbox_$q CONTENT=YES"
+								Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "TAG POS=1 TYPE=INPUT:CHECKBOX FORM=NAME:frmASNCreate ATTR=ID:checkbox_$q CONTENT=YES"
 							}
 							else
 							{
 								$QTYShipped = $Shipment[$i].QTYSHIPPED
-								Add-Content $rootpath\AtechExhaustASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=ID:ASNQty$q CONTENT=$QTYShipped"
+								Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=ID:ASNQty$q CONTENT=$QTYShipped"
 							}
 							
 						
@@ -1166,38 +1166,38 @@ while($Continue -eq "Yes")
 						{
 							$Carrier = "%0023"
 							$Comment = $Shipment[$i-1].SHIPPERNAME
-							Add-Content $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
+							Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
 						}
-						Add-Content $rootpath\AtechExhaustASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
 				
 						$DateShipped = $Shipment[$i-1].SHIPDATE
-						Add-Content $rootpath\AtechExhaustASN.iim "`n'Shipment Date `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:Arrival CONTENT=%$DateShipped"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`n'Shipment Date `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:Arrival CONTENT=%$DateShipped"
 					
 						$TrackingNumber = $Shipment[$i-1].TRACKINGNO
-						Add-Content $rootpath\AtechExhaustASN.iim "`n'Tracking Number Insertion`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:BOL CONTENT=$TrackingNumber"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`n'Tracking Number Insertion`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:BOL CONTENT=$TrackingNumber"
 				
 						#########################################
 						#Insert InvoiceNumber					
 						#########################################
 						
 						$InvoiceNumber = $Shipment[$i-1].INVOICENUMBER
-						Add-Content $rootpath\AtechExhaustASN.iim "`n'Add InvoiceNumber to Invoice Field`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:VendorReference CONTENT=$InvoiceNumber"
-						Add-Content $rootpath\AtechExhaustASN.iim "WAIT SECONDS = 5"
-						Add-Content $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:frmASNCreate ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
-						Add-Content $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmApprove ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`n'Add InvoiceNumber to Invoice Field`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:VendorReference CONTENT=$InvoiceNumber"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "WAIT SECONDS = 5"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:frmASNCreate ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmApprove ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
 				
 						#########################################
 						#Save ASN as a Webpage					
 						#########################################
 						if((Test-Path $SaveDir\$Date\$PONumber-$Date) -eq $true)
 						{
-							Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
+							Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
 						}
 						else
 						{
-							Add-Content $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
+							Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
 						}
-						Add-Content $rootpath\AtechExhaustASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
 
 					}
 				}
@@ -1207,7 +1207,7 @@ while($Continue -eq "Yes")
 			
 				if($i -eq $Shipment.length)
 				{
-						Add-Content $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhaustASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
 				}				
 				
 				#####################################################
@@ -1335,12 +1335,12 @@ while($Continue -eq "Yes")
 			#Build Login Macro 							
 			#############################################
 			
-			Add-Content $rootpath\AtechExhPrivateLabelLogin.iim "TAB T=1 `nURL GOTO=https://b2b.atechmotorsports.com/default.asp"
-			Add-Content $rootpath\AtechExhPrivateLabelLogin.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmLogin ATTR=NAME:UserName CONTENT=$username"
-			Add-Content $rootpath\AtechExhPrivateLabelLogin.iim "SET !ENCRYPTION NO"
-			Add-Content $rootpath\AtechExhPrivateLabelLogin.iim "TAG POS=1 TYPE=INPUT:PASSWORD FORM=NAME:frmLogin ATTR=NAME:Password CONTENT=$password"
-			Add-Content $rootpath\AtechExhPrivateLabelLogin.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmLogin ATTR=VALUE:Go"
-			Add-Content $rootpath\AtechExhPrivateLabelLogin.iim "SAVEAS TYPE=TXT FOLDER=$CSVDir FILE=login.txt"
+			Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelLogin.iim "TAB T=1 `nURL GOTO=https://b2b.atechmotorsports.com/default.asp"
+			Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelLogin.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmLogin ATTR=NAME:UserName CONTENT=$username"
+			Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelLogin.iim "SET !ENCRYPTION NO"
+			Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelLogin.iim "TAG POS=1 TYPE=INPUT:PASSWORD FORM=NAME:frmLogin ATTR=NAME:Password CONTENT=$password"
+			Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelLogin.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmLogin ATTR=VALUE:Go"
+			Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelLogin.iim "SAVEAS TYPE=TXT FOLDER=$CSVDir FILE=login.txt"
 			$password = $null
 			
 			
@@ -1450,18 +1450,18 @@ while($Continue -eq "Yes")
 					#Insert PO and Head to Creation Form				
 					#####################################################
 				
-					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "TAB T=1"
-					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Start at ASN Creation Screen.
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "TAB T=1"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`n'Start at ASN Creation Screen.
 					`nURL GOTO=https://b2b.atechmotorsports.com/ASNCreate.asp?Function=POForm"
 					#New Stuff
-					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "SET !ERRORIGNORE YES"
-					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "SET !TIMEOUT_STEP 0"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "SET !ERRORIGNORE YES"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "SET !TIMEOUT_STEP 0"
 					#New Stuff
-					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Fill in PO#"
-					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
-					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
-					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Fill in the Quantity Shipped"
-					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "TAG POS=1 TYPE=INPUT:CHECKBOX FORM=NAME:frmASNCreate ATTR=NAME:CheckAllBoxes CONTENT=YES"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`n'Fill in PO#"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`n'Fill in the Quantity Shipped"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "TAG POS=1 TYPE=INPUT:CHECKBOX FORM=NAME:frmASNCreate ATTR=NAME:CheckAllBoxes CONTENT=YES"
 				
 				
 					#################################################
@@ -1508,38 +1508,38 @@ while($Continue -eq "Yes")
 					{
 						$Carrier = "%0023"
 						$Comment = $Shipment[$i].SHIPPERNAME
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
 					}
-					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
 			
 					$DateShipped = $Shipment[$i].SHIPDATE
-					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Shipment Date `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:Arrival CONTENT=%$DateShipped"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`n'Shipment Date `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:Arrival CONTENT=%$DateShipped"
 				
 					$TrackingNumber = $Shipment[$i].TRACKINGNO
-					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Tracking Number Insertion`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:BOL CONTENT=$TrackingNumber"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`n'Tracking Number Insertion`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:BOL CONTENT=$TrackingNumber"
 			
 					#########################################
 					#Insert InvoiceNumber					
 					#########################################
 					
 					$InvoiceNumber = $Shipment[$i].INVOICENUMBER
-					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Add InvoiceNumber to Invoice Field`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:VendorReference CONTENT=$InvoiceNumber"
-					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:frmASNCreate ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
-					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmApprove ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`n'Add InvoiceNumber to Invoice Field`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:VendorReference CONTENT=$InvoiceNumber"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:frmASNCreate ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmApprove ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
 			
 					#########################################
 					#Save ASN as a Webpage					
 					#########################################
 					if((Test-Path $SaveDir\$Date\$PONumber-$Date.htm) -eq $true)
 					{
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
 					}
 					else
 					{
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
 					}
 					
-					Add-Content $rootpath\AtechExhPrivateLabelASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
 					
 					$i = $v
 					
@@ -1558,22 +1558,22 @@ while($Continue -eq "Yes")
 					{
 						Remove-Item $rootpath\AtechExhPrivateLabelCheck.iim
 					}
-					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "TAB T=1"
-					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "`n'Start at ASN Creation Screen.
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelCheck.iim "TAB T=1"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelCheck.iim "`n'Start at ASN Creation Screen.
 					`nURL GOTO=https://b2b.atechmotorsports.com/ASNCreate.asp?Function=POForm"
 					#New Stuff
-					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "SET !EXTRACT_TEST_POPUP NO"
-					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "SET !ERRORIGNORE YES"
-					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "SET !TIMEOUT_STEP 0"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelCheck.iim "SET !EXTRACT_TEST_POPUP NO"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelCheck.iim "SET !ERRORIGNORE YES"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelCheck.iim "SET !TIMEOUT_STEP 0"
 					#New Stuff
-					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "`n'Fill in PO#"
-					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
-					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelCheck.iim "`n'Fill in PO#"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelCheck.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelCheck.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
 			
                     while($PONumberLines -eq $PONumber)
 					{
-						Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "TAG POS=$p TYPE=TD FORM=ID:frmASNCreate ATTR=CLASS:$s EXTRACT=TXT"
-						Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "SAVEAS TYPE=EXTRACT FOLDER=$SaveDir FILE=AtechCheck-$PONumber.csv"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelCheck.iim "TAG POS=$p TYPE=TD FORM=ID:frmASNCreate ATTR=CLASS:$s EXTRACT=TXT"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelCheck.iim "SAVEAS TYPE=EXTRACT FOLDER=$SaveDir FILE=AtechCheck-$PONumber.csv"
 						if($s -eq "tblDataShadeRowBorder")
 						{
 							$p = $p + 8
@@ -1589,7 +1589,7 @@ while($Continue -eq "Yes")
 						$c++
 						$PONumberLines = $Shipment[$c].PONUMBER
 					}
-					Add-Content $rootpath\AtechExhPrivateLabelCheck.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir FILE=done.txt"
+					Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelCheck.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir FILE=done.txt"
 					
 					if ((Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe") -eq $true)
 					{
@@ -1629,12 +1629,12 @@ while($Continue -eq "Yes")
 						########################################################
 						#Check is ok! Continue to create ASN
 						########################################################
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Start at ASN Creation Screen. User must be logged in!
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`n'Start at ASN Creation Screen. User must be logged in!
 						`nURL GOTO=https://b2b.atechmotorsports.com/ASNCreate.asp?Function=POForm"
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Fill in PO#"
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Fill in the Quantity Shipped"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`n'Fill in PO#"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmKnownPO ATTR=NAME:PONumber CONTENT=$PONumber"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmKnownPO ATTR=VALUE:Search<SP>for<SP>P.O."
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`n'Fill in the Quantity Shipped"
 						$q = 1
 					
 						#################################################
@@ -1651,12 +1651,12 @@ while($Continue -eq "Yes")
 							$LineComplete = $Shipment[$i].LINECOMPLETE
 							if($LineComplete -eq "Y")
 							{
-								Add-Content $rootpath\AtechExhPrivateLabelASN.iim "TAG POS=1 TYPE=INPUT:CHECKBOX FORM=NAME:frmASNCreate ATTR=ID:checkbox_$q CONTENT=YES"
+								Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "TAG POS=1 TYPE=INPUT:CHECKBOX FORM=NAME:frmASNCreate ATTR=ID:checkbox_$q CONTENT=YES"
 							}
 							else
 							{
 								$QTYShipped = $Shipment[$i].QTYSHIPPED
-								Add-Content $rootpath\AtechExhPrivateLabelASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=ID:ASNQty$q CONTENT=$QTYShipped"
+								Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=ID:ASNQty$q CONTENT=$QTYShipped"
 							}
 							
 						
@@ -1709,38 +1709,38 @@ while($Continue -eq "Yes")
 						{
 							$Carrier = "%0023"
 							$Comment = $Shipment[$i-1].SHIPPERNAME
-							Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
+							Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=TEXTAREA FORM=NAME:frmASNCreate ATTR=NAME:Comments CONTENT=`"$Comment`""
 						}
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`n'Choose Carrier `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:CarrierID CONTENT=$Carrier"
 				
 						$DateShipped = $Shipment[$i-1].SHIPDATE
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Shipment Date `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:Arrival CONTENT=%$DateShipped"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`n'Shipment Date `nTAG POS=1 TYPE=SELECT FORM=NAME:frmASNCreate ATTR=NAME:Arrival CONTENT=%$DateShipped"
 					
 						$TrackingNumber = $Shipment[$i-1].TRACKINGNO
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Tracking Number Insertion`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:BOL CONTENT=$TrackingNumber"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`n'Tracking Number Insertion`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:BOL CONTENT=$TrackingNumber"
 				
 						#########################################
 						#Insert InvoiceNumber					
 						#########################################
 						
 						$InvoiceNumber = $Shipment[$i-1].INVOICENUMBER
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`n'Add InvoiceNumber to Invoice Field`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:VendorReference CONTENT=$InvoiceNumber"
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "WAIT SECONDS = 5"
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:frmASNCreate ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmApprove ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`n'Add InvoiceNumber to Invoice Field`nTAG POS=1 TYPE=INPUT:TEXT FORM=NAME:frmASNCreate ATTR=NAME:VendorReference CONTENT=$InvoiceNumber"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "WAIT SECONDS = 5"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=ID:frmASNCreate ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:frmApprove ATTR=VALUE:<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>Accept<SP><SP><SP><SP><SP><SP><SP><SP><SP><SP>"
 				
 						#########################################
 						#Save ASN as a Webpage					
 						#########################################
 						if((Test-Path $SaveDir\$Date\$PONumber-$Date) -eq $true)
 						{
-							Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
+							Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date-extra"
 						}
 						else
 						{
-							Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
+							Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`nSAVEAS TYPE=HTM FOLDER=$SaveDir\$Date\ FILE=$PONumber-$Date"
 						}
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "SAVEAS TYPE=TXT FOLDER=$SaveDir\ FILE=done.txt"
 
 					}
 				}
@@ -1750,7 +1750,7 @@ while($Continue -eq "Yes")
 			
 				if($i -eq $Shipment.length)
 				{
-						Add-Content $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
+						Add-Content -Encoding UTF8 $rootpath\AtechExhPrivateLabelASN.iim "`nTAG POS=1 TYPE=A ATTR=TXT:Log<SP>Out"
 				}				
 				
 				#####################################################
